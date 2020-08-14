@@ -10,12 +10,15 @@ class Home extends Component {
 
 	render() {
 		return this.props.user.isAuth ? (
-			<div id="Home">Sup homie </div>
+			<div id="Home">
+				<h1>Sup, you're logged in!</h1>
+
+				<hr />
+				<button onClick={() => this.props.reset()}>RESET THIS MOTHA</button>
+			</div>
 		) : (
 			<div id="Home">
-				Sup, you at home
-				<hr />
-				<a href="/login">login</a>
+				<h1>Sup, you're not logged in!</h1>
 				<hr />
 				<button onClick={() => this.props.reset()}>RESET THIS MOTHA</button>
 			</div>
