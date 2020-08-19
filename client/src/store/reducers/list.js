@@ -6,7 +6,7 @@ export default function (state = {}, action) {
 			return { ...state, characters: action.payload };
 		case "CHARACTERS_GET_BY_AUTHOR":
 			return { ...state, characters: action.payload };
-		case "RESET":
+		case "GLOBAL_STATE_RESET":
 			return {};
 		default:
 			return state;

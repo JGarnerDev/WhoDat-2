@@ -4,10 +4,11 @@ export default function (state = { isAuth: false }, action) {
 			return {
 				...state,
 				register: action.payload.data.success,
+				isAuth: action.payload.data.success,
 				message: action.payload.data.message || "",
 			};
 		case "USER_UPDATE":
-			return { ...state, user: action.payload };
+			return { ...state, ...action.payload };
 		case "USER_DELETE":
 			return {};
 		case "USER_AUTH":
@@ -16,7 +17,7 @@ export default function (state = { isAuth: false }, action) {
 			return { ...state, ...action.payload };
 		case "USER_LOGOUT":
 			return { isAuth: false };
-		case "RESET":
+		case "GLOBAL_STATE_RESET":
 			return { isAuth: false };
 		default:
 			return state;

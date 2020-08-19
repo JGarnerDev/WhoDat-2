@@ -164,7 +164,7 @@ app.get("/api/logout", auth, (req, res) => {
 					"There was an error in logging you out.You might bealready logged out - you can't log out any harder.",
 			});
 		}
-		res.json({ success: true, user, message: "Goodbye!" });
+		res.json({ success: true, message: "Goodbye!" });
 	});
 });
 
@@ -189,7 +189,6 @@ app.post("/api/register", (req, res) => {
 		} else {
 			res.status(200).json({
 				success: true,
-				user: doc,
 			});
 		}
 	});
@@ -218,6 +217,8 @@ app.post("/api/login", (req, res) => {
 					isAuth: true,
 					id: user._id,
 					email: user.email,
+					name: user.name,
+					lastname: user.lastname,
 				});
 			});
 		});
@@ -235,8 +236,8 @@ app.post("/api/character", (req, res) => {
 					"Unfortunately, there was an error in creating this character.",
 			});
 		res.status(200).json({
-			post: true,
 			success: true,
+			message: "Character saved!",
 		});
 	});
 });
@@ -265,24 +266,18 @@ app.post("/api/user_update", (req, res) => {
 });
 
 app.post("/api/character_update", (req, res) => {
-	Character.findByIdAndUpdate(
-		req.body._id,
-		req.body,
-		{ new: true },
-		(err, character) => {
-			if (err)
-				return res.json({
-					success: false,
-					message:
-						"Unfortunately, there was an error in locating your character for updating. ",
-				});
-			res.json({
-				success: true,
-				message: `${req.body.name} was successfully updated!`,
-				character,
+	Character.findByIdAndUpdate(req.body._id, req.body, { new: true }, (err) => {
+		if (err)
+			return res.json({
+				success: false,
+				message:
+					"Unfortunately, there was an error in locating your character for updating. ",
 			});
-		}
-	);
+		res.json({
+			success: true,
+			message: `${req.body.name} was successfully updated!`,
+		});
+	});
 });
 
 // DELETE //

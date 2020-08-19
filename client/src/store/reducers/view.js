@@ -6,8 +6,8 @@ export default function (state = {}, action) {
 			return { ...state, user: action.payload };
 		case "CHARACTER_GET":
 			return { ...state, character: action.payload };
-		case "RESET":
-			return { current: "Home" };
+		case "GLOBAL_STATE_RESET":
+			return { current: "home" };
 		default:
 			return state;
 	}

@@ -30,10 +30,11 @@ export const actionTypes = {
 	CHARACTER_SAVE: "CHARACTER_SAVE",
 	CHARACTER_UPDATE: "CHARACTER_UPDATE",
 	CHARACTER_DELETE: "CHARACTER_DELETE",
+	CHARACTER_STATE_RESET: "CHARACTER_STATE_RESET",
 
 	// Resetting Redux State
 
-	RESET: "RESET",
+	GLOBAL_STATE_RESET: "GLOBAL_STATE_RESET",
 };
 
 // Views (view reducer)
@@ -187,6 +188,6 @@ export function deleteCharacterById(id) {
 
 export function reset() {
 	return {
-		type: actionTypes.RESET,
+		type: actionTypes.GLOBAL_STATE_RESET,
 	};
 }

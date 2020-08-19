@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { Link } from "react-router-dom";
 
@@ -16,20 +17,26 @@ const linkContent = {
 	home: ["/home", <HomeIcon />, "Home"],
 	settings: ["/settings", <SettingsIcon />, "Account Settings"],
 	community: ["/community", <DeviceHubOutlinedIcon />, "Community"],
-	characters: [
-		"/characters",
-		<PeopleAltOutlinedIcon />,
-		"Community Characters",
-	],
+	characters: ["/characters", <PeopleAltOutlinedIcon />, "Characters"],
 	create: ["/create", <AddCircleRoundedIcon />, "Create New Character"],
 };
 
-export default function NavLink(props) {
-	const contents = linkContent[props.navLinkPath];
+// The NavLink component only renders when it has a navLinkPath string prop that matches with the keys of linkContent above.
+//
 
-	return (
-		<Link to={contents[0]}>
-			{contents[1]} {contents[2]}
+function NavLink({ navLinkPath }) {
+	const contents = linkContent[navLinkPath] || null;
+
+	return contents ? (
+		<Link to={contents[0]} data-test="component-NavLink">
+			<div data-test="NavLink-iconwrapper">{contents[1]}</div>
+			<div>{contents[2]}</div>
 		</Link>
-	);
+	) : null;
 }
+
+NavLink.propTypes = {
+	navLinkPath: PropTypes.string,
+};
+
+export default NavLink;
