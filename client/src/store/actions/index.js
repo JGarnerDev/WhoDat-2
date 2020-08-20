@@ -24,6 +24,8 @@ export const actionTypes = {
 	USER_AUTH: "USER_AUTH",
 	USER_LOGIN: "USER_LOGIN",
 	USER_LOGOUT: "USER_LOGOUT",
+	USER_WELCOME_NOTIFY: "USER_WELCOME_NOTIFY",
+	USER_GOODBYE_NOTIFY: "USER_GOODBYE_NOTIFY",
 
 	// Character CRUD (chracter reducer)
 
@@ -135,9 +137,9 @@ export function auth() {
 	};
 }
 
-export function logUserIn({ email, password }) {
+export function logUserIn({ username, password }) {
 	const request = axios
-		.post("/api/login", { email, password })
+		.post("/api/login", { username, password })
 		.then((response) => response.data);
 
 	return {
@@ -150,7 +152,18 @@ export function logUserOut() {
 	axios.get("/api/logout");
 	return {
 		type: actionTypes.USER_LOGOUT,
-		payload: "Goodbye!",
+	};
+}
+export function welcomeNotify() {
+	return {
+		type: actionTypes.USER_WELCOME_NOTIFY,
+		payload: 1,
+	};
+}
+export function goodbyeNotify() {
+	return {
+		type: actionTypes.USER_GOODBYE_NOTIFY,
+		payload: 1,
 	};
 }
 

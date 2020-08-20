@@ -6,6 +6,7 @@ import { registerUser } from "../../store/actions";
 
 class Register extends Component {
 	state = {
+		username: "",
 		name: "",
 		lastname: "",
 		email: "",
@@ -22,7 +23,7 @@ class Register extends Component {
 		event.preventDefault();
 
 		this.props.registerUser({
-			name: this.state.name,
+			username: this.state.username,
 			lastname: this.state.lastname,
 			email: this.state.email,
 			password: this.state.password,
@@ -36,16 +37,9 @@ class Register extends Component {
 					<input
 						type="text"
 						name="name"
-						placeholder="First name"
-						value={this.state.name}
-						onChange={this.handleChangeFor("name")}
-					/>
-					<input
-						type="text"
-						name="lastname"
-						placeholder="Last Name"
-						value={this.state.lastname}
-						onChange={this.handleChangeFor("lastname")}
+						placeholder="Username"
+						value={this.state.username}
+						onChange={this.handleChangeFor("username")}
 					/>
 					<input
 						type="email"

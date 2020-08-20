@@ -177,29 +177,24 @@ app.post("/api/register", (req, res) => {
 
 	user.save((err, doc) => {
 		if (err) {
+			console.log(err);
 			return res.json({
 				success: false,
 				message: "An account with that email already exists! ",
 			});
-		} else if (err) {
-			res.json({
-				success: false,
-				message: "An error occurred and we're not quite sure what happened",
-			});
-		} else {
-			delete doc.password;
-			res.status(200).json({
-				success: true,
-				doc,
-			});
 		}
+		delete doc.password;
+		res.status(200).json({
+			success: true,
+			doc,
+		});
 	});
 });
 
 // User Login
 
 app.post("/api/login", (req, res) => {
-	User.findOne({ email: req.body.email }, (err, user) => {
+	User.findOne({ username: req.body.username }, (err, user) => {
 		if (!user)
 			return res.json({
 				isAuth: false,
@@ -219,6 +214,7 @@ app.post("/api/login", (req, res) => {
 					isAuth: true,
 					id: user._id,
 					email: user.email,
+					username: user.username,
 					name: user.name,
 					lastname: user.lastname,
 				});

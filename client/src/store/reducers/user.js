@@ -1,4 +1,12 @@
-export default function (state = { isAuth: false }, action) {
+export default function (
+	state = {
+		isAuth: false,
+		logout: false,
+		welcomeNotified: 0,
+		goodbyeNotified: 0,
+	},
+	action
+) {
 	switch (action.type) {
 		case "USER_REGISTER":
 			let user;
@@ -22,11 +30,30 @@ export default function (state = { isAuth: false }, action) {
 		case "USER_AUTH":
 			return { ...state, ...action.payload };
 		case "USER_LOGIN":
-			return { ...action.payload };
+			return {
+				...state,
+				...action.payload,
+				welcomeNotified: 0,
+				goodbyeNotified: 0,
+			};
 		case "USER_LOGOUT":
-			return { isAuth: false };
+			return {
+				isAuth: false,
+				logout: true,
+				welcomeNotified: 0,
+				goodbyeNotified: 0,
+			};
+		case "USER_WELCOME_NOTIFY":
+			return { ...state, welcomeNotified: state.welcomeNotified + 1 };
+		case "USER_GOODBYE_NOTIFY":
+			return { ...state, goodbyeNotified: state.goodbyeNotified + 1 };
 		case "GLOBAL_STATE_RESET":
-			return { isAuth: false };
+			return {
+				isAuth: false,
+				logout: false,
+				welcomeNotified: 0,
+				goodbyeNotified: 0,
+			};
 		default:
 			return state;
 	}

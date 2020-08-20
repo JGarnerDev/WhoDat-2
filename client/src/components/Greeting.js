@@ -6,7 +6,7 @@ export default function Greeting({ user }) {
 	}
 	return user.isAuth ? (
 		<div>
-			<h1> Hey, {user.name}! </h1>
+			<h1> Hey, {user.username}! </h1>
 			<h3 data-test="cta">Let's get started!</h3>
 		</div>
 	) : (

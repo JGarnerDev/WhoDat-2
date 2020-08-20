@@ -14,6 +14,11 @@ const persistConfig = {
 	whitelist: ["user", "view", "list", "character"],
 };
 
-const rootReducer = combineReducers({ view, list, user, character });
+const rootReducer = combineReducers({
+	view,
+	list,
+	user,
+	character,
+});
 
 export default persistReducer(persistConfig, rootReducer);
