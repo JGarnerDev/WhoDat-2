@@ -12,10 +12,10 @@ import HomeIcon from "@material-ui/icons/Home";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 const linkContent = {
-	login: ["/login", <PersonAddIcon />, "Log in / Register"],
-	logout: ["/logout", <ExitToAppOutlinedIcon />, "Log out"],
 	home: ["/home", <HomeIcon />, "Home"],
-	settings: ["/settings", <SettingsIcon />, "Account Settings"],
+	login: ["/login", <PersonAddIcon />, "Log in / Register"],
+	logout: ["/user/logout", <ExitToAppOutlinedIcon />, "Log out"],
+	settings: ["/user/settings", <SettingsIcon />, "Account Settings"],
 	community: ["/community", <DeviceHubOutlinedIcon />, "Community"],
 	characters: ["/characters", <PeopleAltOutlinedIcon />, "Characters"],
 	create: ["/create", <AddCircleRoundedIcon />, "Create New Character"],

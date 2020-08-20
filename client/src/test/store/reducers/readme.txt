@@ -1,7 +1,7 @@
 What these tests are assessing: 
 
-    - That action creators are defined and reducers return the current 
-        state as a default (sanity tests)
+    - That action creators and reducers are defined and reducers return 
+        the current state as a default (sanity tests)
 
     - That action creators are called through the reducers and return 
         expected values 

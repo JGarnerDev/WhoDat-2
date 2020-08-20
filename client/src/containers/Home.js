@@ -1,4 +1,9 @@
 import React, { Component } from "react";
+
+import Greeting from "../components/Greeting";
+import Login from "../containers/Admin/Login";
+import CharacterList from "../components/Characters/CharacterList";
+
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { reset, setView } from "../store/actions";
@@ -9,17 +14,10 @@ class Home extends Component {
 	}
 
 	render() {
-		return this.props.user.isAuth ? (
-			<div id="Home">
-				<h1>Sup, you're logged in!</h1>
-
-				<hr />
-				<button onClick={() => this.props.reset()}>RESET THIS MOTHA</button>
-			</div>
-		) : (
-			<div id="Home">
-				<h1>Sup, you're not logged in!</h1>
-				<hr />
+		return (
+			<div id="Home" data-test="container-home">
+				<Greeting user={this.props.user} data-test="greeting" />
+				{this.props.user.isAuth ? <CharacterList /> : <Login />}
 				<button onClick={() => this.props.reset()}>RESET THIS MOTHA</button>
 			</div>
 		);

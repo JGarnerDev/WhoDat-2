@@ -8,7 +8,7 @@ import Login from "./containers/Admin/Login";
 import Logout from "./containers/Admin/Logout";
 import CharacterView from "./components/Characters/CharacterView";
 import UserView from "./components/User/UserView";
-import Create from "./containers/Admin/CreateCharacter";
+import Create from "./containers/Character/CreateCharacter";
 
 const Routes = ({ user }) => {
 	return (
@@ -17,7 +17,7 @@ const Routes = ({ user }) => {
 			<Route path="/" exact component={Home} />
 			<Route path="/login" exact component={Login} />
 			<Route path="/create" exact component={Create} />
-
+			<Route path="/character/:id" exact component={CharacterView} />
 			{/* Private Routes */}
 			<ProtectedRoute
 				path="/user/logout"
@@ -32,12 +32,6 @@ const Routes = ({ user }) => {
 				isAuth={user.isAuth}
 			/>
 
-			<ProtectedRoute
-				path="/character/:id"
-				exact
-				component={CharacterView}
-				isAuth={user.isAuth}
-			/>
 			{/* reroutes any address that the above don't match with, and sends them to the home page */}
 			<Route path="*" render={() => <Redirect to="/" />} />
 		</Switch>

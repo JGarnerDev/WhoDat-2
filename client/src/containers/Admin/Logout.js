@@ -1,30 +1,16 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { logUserOut } from "../../store/actions";
 
 class Logout extends Component {
-	logout = () => {
+	componentDidMount() {
 		this.props.logUserOut();
-	};
+	}
 
 	render() {
-		// return this.props.user.login === "Goodbye!" ? (
-		// 	<Redirect to={{ pathname: "/" }} />
-		// ) :
-
-		return (
-			<div id="Logout">
-				<button
-					onClick={() => {
-						this.logout();
-					}}
-				>
-					Log out
-				</button>
-				<h1>{this.props.user.goodbye ? "" : "Goodbye!"}</h1>
-			</div>
-		);
+		return <Redirect to="/" />;
 	}
 }
 

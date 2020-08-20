@@ -161,7 +161,7 @@ app.get("/api/logout", auth, (req, res) => {
 			return res.json({
 				success: false,
 				message:
-					"There was an error in logging you out.You might bealready logged out - you can't log out any harder.",
+					"There was an error in logging you out. You might bealready logged out - you can't log out any harder.",
 			});
 		}
 		res.json({ success: true, message: "Goodbye!" });
@@ -187,8 +187,10 @@ app.post("/api/register", (req, res) => {
 				message: "An error occurred and we're not quite sure what happened",
 			});
 		} else {
+			delete doc.password;
 			res.status(200).json({
 				success: true,
+				doc,
 			});
 		}
 	});

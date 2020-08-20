@@ -2,7 +2,8 @@ import { actionTypes } from "../../../store/actions/index";
 import viewReducer from "../../../store/reducers/view";
 
 describe("View reducer", () => {
-	// this reducer is responsible for handling the 'view' previousState, which is to keep track of where the user is on the app
+	// this reducer is responsible for handling the 'view' previousState,
+	//  which is to keep track of where the user is on the app
 	describe("Sanity tests", () => {
 		it("has a module", () => {
 			expect(viewReducer).toBeDefined();

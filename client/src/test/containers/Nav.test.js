@@ -26,14 +26,14 @@ describe("Nav container component", () => {
 		it("renders without error when user is not authorized", () => {
 			const notAuthUserNav = setupNotAuthNav().dive().dive();
 
-			const found = findByTestAttr(notAuthUserNav, "component-nav");
+			const found = findByTestAttr(notAuthUserNav, "container-nav");
 			expect(found.length).toBe(1);
 		});
 
 		it("renders without error when user is authorized", () => {
 			const authUserNav = setupAuthNav().dive().dive();
 
-			const found = findByTestAttr(authUserNav, "component-nav");
+			const found = findByTestAttr(authUserNav, "container-nav");
 			expect(found.length).toBe(1);
 		});
 	});
@@ -59,10 +59,6 @@ describe("Nav container component", () => {
 		});
 
 		describe("it renders the appropriate links for unauthorized users", () => {
-			it("should render `login` link ", () => {
-				const found = findByTestAttr(notAuthUserNav, "link-login");
-				expect(found.length).toBe(1);
-			});
 			it("should render `home` link ", () => {
 				const found = findByTestAttr(notAuthUserNav, "link-home");
 				expect(found.length).toBe(1);
@@ -122,12 +118,6 @@ describe("Nav container component", () => {
 			it("should render `settings` link ", () => {
 				const found = findByTestAttr(authUserNav, "link-settings");
 				expect(found.length).toBe(1);
-			});
-		});
-		describe("it does not render the unprotected links intended for unauthorized users", () => {
-			it("does not  render `login` link ", () => {
-				const found = findByTestAttr(authUserNav, "link-login");
-				expect(found.length).toBe(0);
 			});
 		});
 	});

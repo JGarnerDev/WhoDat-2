@@ -19,41 +19,53 @@ describe("User reducer", () => {
 	});
 
 	describe("USER_REGISTER action type", () => {
-		it("will update `register`, `isAuth`, and `message` value with the action payload when there is no previous value", () => {
+		it("should only update register.success and register.message if registration fails", () => {
 			const previousState = undefined;
 			const action = {
 				type: actionTypes.USER_REGISTER,
-				payload: { data: { success: true, message: "Success!" } },
+				payload: {
+					data: {
+						success: false,
+						message: "A user with that email already exists!",
+					},
+				},
 			};
 			const updatedState = userReducer(previousState, action);
-			const expected = { register: true, isAuth: true, message: "Success!" };
-
-			expect(updatedState).toEqual(expected);
-		});
-		it("will update `register`, `isAuth`, and `message` value with the action payload when isAuth is false", () => {
-			const previousState = { isAuth: false };
-			const action = {
-				type: actionTypes.USER_REGISTER,
-				payload: { data: { success: true, message: "Success!" } },
-			};
-			const updatedState = userReducer(previousState, action);
-			const expected = { register: true, isAuth: true, message: "Success!" };
-
-			expect(updatedState).toEqual(expected);
-		});
-		it("will update `register`, `isAuth`, and `message` value with the action payload when an attempt at registry did not succeed before it", () => {
-			const previousState = {
-				register: false,
+			const expected = {
 				isAuth: false,
-				message: "Sorry, my server is on fire",
+				register: {
+					success: false,
+					message: "A user with that email already exists!",
+				},
+			};
+			expect(updatedState).toEqual(expected);
+		});
+		it("should update the user state with names, email, role, id, and characters (empty array)", () => {
+			const previousState = undefined;
+			const userDoc = {
+				name: "foo",
+				lastname: "bar",
+				email: "m@m.com",
+				_id: "123124",
 			};
 			const action = {
 				type: actionTypes.USER_REGISTER,
-				payload: { data: { success: true, message: "Success!" } },
+				payload: {
+					data: {
+						success: true,
+						doc: userDoc,
+					},
+				},
 			};
 			const updatedState = userReducer(previousState, action);
-			const expected = { register: true, isAuth: true, message: "Success!" };
-
+			const expected = {
+				isAuth: true,
+				register: {
+					success: true,
+					message: "",
+				},
+				...userDoc,
+			};
 			expect(updatedState).toEqual(expected);
 		});
 	});
@@ -74,7 +86,7 @@ describe("User reducer", () => {
 		});
 	});
 	describe("USER_DELETE action type", () => {
-		it("will delete `user` value with the action payload when there is a previous value", () => {
+		it("will delete `user` properties ", () => {
 			const previousUser = { name: "Jack", id: "1337", email: "no@gmail.com" };
 			const previousState = { isAuth: true, user: previousUser };
 			const action = {

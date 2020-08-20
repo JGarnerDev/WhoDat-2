@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import PropTypes from "prop-types";
+import { logUserOut } from "../store/actions";
 
 import NavLink from "../components/NavLink";
 
@@ -26,12 +27,14 @@ class NavContainer extends Component {
 	};
 
 	renderLinksByAuth = (userIsAuth) => {
-		// These arrays establish which links will be rendered by matching what is available in the NavLink component
+		// These arrays establish which links (and in what order) will be rendered by matching what is available in the NavLink component
+
 		// If a link is not rendering, it's most likely because the string here isn't matching with a string in the NavLink component
-		const nonAuthLinks = ["login", "home", "community", "characters", "create"];
+
+		const nonAuthLinks = ["home", "community", "characters", "create"];
 		const authLinks = [
-			"logout",
 			"home",
+			"logout",
 			"settings",
 			"community",
 			"characters",
@@ -62,7 +65,7 @@ class NavContainer extends Component {
 		const anchor = "right";
 
 		return (
-			<nav key={anchor} data-test="component-nav">
+			<nav key={anchor} data-test="container-nav">
 				<Button onClick={this.toggleDrawer(anchor, true)}>
 					<MenuRoundedIcon />
 				</Button>
@@ -70,6 +73,7 @@ class NavContainer extends Component {
 				<SwipeableDrawer
 					anchor={anchor}
 					open={this.state[anchor]}
+					onClick={this.toggleDrawer(anchor, false)}
 					onClose={this.toggleDrawer(anchor, false)}
 					onOpen={this.toggleDrawer(anchor, true)}
 				>
@@ -95,7 +99,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({}, dispatch);
+	return bindActionCreators({ logUserOut }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavContainer);

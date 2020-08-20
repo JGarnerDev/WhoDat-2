@@ -33,7 +33,6 @@ class Register extends Component {
 		return (
 			<div id="Register">
 				<form onSubmit={this.submitForm}>
-					<h2>Register</h2>
 					<input
 						type="text"
 						name="name"
