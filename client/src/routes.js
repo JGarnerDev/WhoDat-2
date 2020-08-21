@@ -6,6 +6,7 @@ import ProtectedRoute from "./protected.route";
 import Home from "./containers/Home";
 import Login from "./containers/Admin/Login";
 import Logout from "./containers/Admin/Logout";
+import AccountSettings from "./containers/Admin/AccountSettings";
 import CharacterView from "./components/Characters/CharacterView";
 import UserView from "./components/User/UserView";
 import Create from "./containers/Character/CreateCharacter";
@@ -26,9 +27,9 @@ const Routes = ({ user }) => {
 				isAuth={user.isAuth}
 			/>
 			<ProtectedRoute
-				path="/user/:id"
+				path="/user/settings"
 				exact
-				component={UserView}
+				component={AccountSettings}
 				isAuth={user.isAuth}
 			/>
 			<ProtectedRoute

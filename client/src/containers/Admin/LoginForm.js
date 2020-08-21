@@ -43,6 +43,7 @@ class Register extends Component {
 					/>
 					<button type="submit">Log in</button>
 				</form>
+				<div>{this.props.user.message}</div>
 			</div>
 		);
 	}

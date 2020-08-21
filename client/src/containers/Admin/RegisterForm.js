@@ -64,7 +64,6 @@ class Register extends Component {
 					/>
 					<button type="submit">Register</button>
 				</form>
-				<div>{this.props.user.message}</div>
 			</div>
 		);
 	}
