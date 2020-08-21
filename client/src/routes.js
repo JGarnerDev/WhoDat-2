@@ -31,6 +31,12 @@ const Routes = ({ user }) => {
 				component={UserView}
 				isAuth={user.isAuth}
 			/>
+			<ProtectedRoute
+				path="/user/:id"
+				exact
+				component={UserView}
+				isAuth={user.isAuth}
+			/>
 
 			{/* reroutes any address that the above don't match with, and sends them to the home page */}
 			<Route path="*" render={() => <Redirect to="/" />} />
