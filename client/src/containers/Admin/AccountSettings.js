@@ -36,35 +36,39 @@ class AccountSettings extends Component {
 					<div>
 						<h2>Change Username</h2>
 						<TextField
-							id="username"
 							label="Username"
 							variant="outlined"
 							data-test="input-changeUsername"
+							value={this.state.username}
+							onChange={this.handleChangeFor("username")}
 						/>
 					</div>
 					<div>
 						<h2>Change Email</h2>
 
 						<TextField
-							id="username"
 							label="Email"
 							variant="outlined"
 							data-test="input-changeEmail"
+							value={this.state.email}
+							onChange={this.handleChangeFor("email")}
 						/>
 					</div>
 					<div>
 						<h2>Change Password</h2>
 						<TextField
-							id="username"
 							label="Password"
 							variant="outlined"
 							data-test="input-changePassword"
+							value={this.state.password}
+							onChange={this.handleChangeFor("password")}
 						/>
 						<TextField
-							id="username"
 							label="Confirm Password"
 							variant="outlined"
 							data-test="input-confirmChangePassword"
+							value={this.state.confirmPassword}
+							onChange={this.handleChangeFor("confirmPassword")}
 						/>
 					</div>
 				</form>

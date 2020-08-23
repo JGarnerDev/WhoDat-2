@@ -65,40 +65,116 @@ describe("AccountSettings container component", () => {
 				expect(found.length).toBe(1);
 			});
 			describe("Account Settings Form", () => {
-				it("renders without error", () => {
-					const found = findByTestAttr(
-						authAccountSettings,
-						"accountSettings-form"
-					);
-					expect(found.length).toBe(1);
+				describe("Rendering", () => {
+					// The form elements rely on Material UI as a dependancy,
+					// 	these tests are essentially sanity checks to ensure
+					//  the library is still functioning
+					it("Form renders without error", () => {
+						const found = findByTestAttr(
+							authAccountSettings,
+							"accountSettings-form"
+						);
+						expect(found.length).toBe(1);
+					});
+					it("has a username change input component", () => {
+						const found = findByTestAttr(
+							authAccountSettings,
+							"input-changeUsername"
+						);
+						expect(found.length).toBe(1);
+					});
+					it("has a email change input component", () => {
+						const found = findByTestAttr(
+							authAccountSettings,
+							"input-changeEmail"
+						);
+						expect(found.length).toBe(1);
+					});
+					it("has a password change input component", () => {
+						const found = findByTestAttr(
+							authAccountSettings,
+							"input-changePassword"
+						);
+						expect(found.length).toBe(1);
+					});
+					it("has a confirm password change input component", () => {
+						const found = findByTestAttr(
+							authAccountSettings,
+							"input-confirmChangePassword"
+						);
+						expect(found.length).toBe(1);
+					});
 				});
-				it("has a username change input component", () => {
-					const found = findByTestAttr(
-						authAccountSettings,
-						"input-changeUsername"
-					);
-					expect(found.length).toBe(1);
+				describe("Username input", () => {
+					it("Has a functioning value and onChange properties that update state", () => {
+						let usernameInput = findByTestAttr(
+							authAccountSettings,
+							"input-changeUsername"
+						);
+						usernameInput.simulate("change", { target: { value: "Foo" } });
+						usernameInput = findByTestAttr(
+							authAccountSettings,
+							"input-changeUsername"
+						);
+						const usernameStateProp = authAccountSettings.state().username;
+
+						expect(usernameInput.props().value).toEqual("Foo");
+						expect(usernameStateProp).toEqual("Foo");
+					});
 				});
-				it("has a email change input component", () => {
-					const found = findByTestAttr(
-						authAccountSettings,
-						"input-changeEmail"
-					);
-					expect(found.length).toBe(1);
+				describe("Email input", () => {
+					it("Has a functioning value and onChange properties that update state", () => {
+						let emailInput = findByTestAttr(
+							authAccountSettings,
+							"input-changeEmail"
+						);
+						emailInput.simulate("change", { target: { value: "Foo" } });
+						emailInput = findByTestAttr(
+							authAccountSettings,
+							"input-changeEmail"
+						);
+						const emailInputStateProp = authAccountSettings.state().email;
+
+						expect(emailInput.props().value).toEqual("Foo");
+						expect(emailInputStateProp).toEqual("Foo");
+					});
 				});
-				it("has a password change input component", () => {
-					const found = findByTestAttr(
-						authAccountSettings,
-						"input-changePassword"
-					);
-					expect(found.length).toBe(1);
+				describe("Password input", () => {
+					it("Has a functioning value and onChange properties that update state", () => {
+						let passwordInput = findByTestAttr(
+							authAccountSettings,
+							"input-changePassword"
+						);
+						passwordInput.simulate("change", { target: { value: "Foo" } });
+						passwordInput = findByTestAttr(
+							authAccountSettings,
+							"input-changePassword"
+						);
+						const passwordInputStateProp = authAccountSettings.state().password;
+
+						expect(passwordInput.props().value).toEqual("Foo");
+						expect(passwordInputStateProp).toEqual("Foo");
+					});
 				});
-				it("has a confirm password change input component", () => {
-					const found = findByTestAttr(
-						authAccountSettings,
-						"input-confirmChangePassword"
-					);
-					expect(found.length).toBe(1);
+				describe("Change password input", () => {
+					it("Has a functioning value and onChange properties that update state", () => {
+						let confirmPasswordInput = findByTestAttr(
+							authAccountSettings,
+							"input-confirmChangePassword"
+						);
+						confirmPasswordInput.simulate("change", {
+							target: { value: "Foo" },
+						});
+						confirmPasswordInput = findByTestAttr(
+							authAccountSettings,
+							"input-confirmChangePassword"
+						);
+						const confirmPasswordInputStateProp = authAccountSettings.state()
+							.confirmPassword;
+
+						expect(confirmPasswordInput.props().value).toEqual("Foo");
+						expect(confirmPasswordInputStateProp).toEqual("Foo");
+					});
 				});
 			});
 		});
