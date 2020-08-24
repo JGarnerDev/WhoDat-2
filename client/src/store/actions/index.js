@@ -116,7 +116,7 @@ export function updateUser(updatedUserData) {
 	const request = axios.post("/api/user_update", updatedUserData);
 	return {
 		type: actionTypes.USER_UPDATE,
-		payload: request.success,
+		payload: request,
 	};
 }
 

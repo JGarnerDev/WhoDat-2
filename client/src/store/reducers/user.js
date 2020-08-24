@@ -24,7 +24,20 @@ export default function (
 				...user,
 			};
 		case "USER_UPDATE":
-			return { ...state, ...action.payload };
+			let updatedUser;
+			if (action.payload.data.userData) {
+				updatedUser = action.payload.data.userData;
+				delete updatedUser.token;
+				delete updatedUser.password;
+			}
+			return {
+				...state,
+				...updatedUser,
+				updated: {
+					success: action.payload.data.success,
+					message: action.payload.data.message,
+				},
+			};
 		case "USER_DELETE":
 			return {};
 		case "USER_AUTH":

@@ -47,7 +47,7 @@ let db = connection.collections;
 app.get("/api/auth", auth, (req, res) => {
 	res.json({
 		isAuth: true,
-		id: req.user._id,
+		_id: req.user._id,
 		email: req.user.email,
 		name: req.user.name,
 		lastname: req.user.lastname,
@@ -57,8 +57,7 @@ app.get("/api/auth", auth, (req, res) => {
 // Retrieve one character
 
 app.get("/api/character", (req, res) => {
-	let id = req.body._id;
-	Character.findOne({ authorId: id }, (err, characterObj) => {
+	Character.findOne({ authorId: req.body._id }, (err, characterObj) => {
 		if (err)
 			return res.json({
 				success: false,
@@ -88,8 +87,7 @@ app.get("/api/characters", (req, res) => {
 // Retrieve character author meta
 
 app.get("/api/author_get", (req, res) => {
-	let id = req.body.id;
-	User.findById(id, (err, user) => {
+	User.findById(req.body._id, (err, user) => {
 		if (err) return res.status(400).send(err);
 		if (!user) user = { name: "unknown", lastname: "user" };
 		res.send({
@@ -123,8 +121,7 @@ app.get("/api/users_get", async (req, res) => {
 // Retrieve a user
 
 app.get("/api/user", (req, res) => {
-	let id = req.body._id;
-	User.findById(id, (err, user) => {
+	User.findById(req.body._id, (err, user) => {
 		if (err || user === null)
 			return res.json({
 				error: true,
@@ -212,7 +209,7 @@ app.post("/api/login", (req, res) => {
 				if (err) return res.status(400).send(err);
 				res.cookie("auth", user.token).json({
 					isAuth: true,
-					id: user._id,
+					_id: user._id,
 					email: user.email,
 					username: user.username,
 					name: user.name,
@@ -243,18 +240,22 @@ app.post("/api/character", (req, res) => {
 // UPDATE //
 
 app.post("/api/user_update", (req, res) => {
+	console.log(req.body);
 	User.findByIdAndUpdate(
 		req.body._id,
 		req.body,
 		{ new: true },
 		(err, userData) => {
-			if (err)
+			if (err) {
+				console.log(err);
 				return res.json({
 					success: false,
 					error: err,
 					message:
 						"Unfortunately, there was an error in locating your user file for update. ",
 				});
+			}
+			console.log(userData);
 			res.json({
 				success: true,
 				userData,
@@ -281,8 +282,7 @@ app.post("/api/character_update", (req, res) => {
 // DELETE //
 
 app.delete("/api/user_delete", (req, res) => {
-	let id = req.body._id;
-	User.findByIdAndRemove(id, (err, doc) => {
+	User.findByIdAndRemove(req.body._id, (err, doc) => {
 		if (err || doc === null)
 			return res.json({
 				success: false,
@@ -296,8 +296,7 @@ app.delete("/api/user_delete", (req, res) => {
 	});
 });
 app.delete("/api/character_delete", (req, res) => {
-	let id = req.body._id;
-	Character.findByIdAndRemove(id, (err, doc) => {
+	Character.findByIdAndRemove(req.body._id, (err, doc) => {
 		if (err || doc === null)
 			return res.json({
 				success: false,

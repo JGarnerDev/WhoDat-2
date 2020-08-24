@@ -8,7 +8,9 @@ import TextField from "@material-ui/core/TextField";
 import { setView, updateUser, deleteUserById } from "../../store/actions";
 
 class AccountSettings extends Component {
-	state = {};
+	state = {
+		_id: this.props.user._id,
+	};
 
 	componentDidMount() {
 		this.props.setView("settings");
@@ -32,7 +34,7 @@ class AccountSettings extends Component {
 					<h4>Username: {this.props.user.username}</h4>
 					<h4>Email: {this.props.user.email}</h4>
 				</div>
-				<form data-test="accountSettings-form">
+				<form onSubmit={this.submitForm} data-test="accountSettings-form">
 					<div>
 						<h2>Change Username</h2>
 						<TextField
@@ -42,6 +44,7 @@ class AccountSettings extends Component {
 							value={this.state.username}
 							onChange={this.handleChangeFor("username")}
 						/>
+						<div data-test="username-error"></div>
 					</div>
 					<div>
 						<h2>Change Email</h2>
@@ -53,6 +56,7 @@ class AccountSettings extends Component {
 							value={this.state.email}
 							onChange={this.handleChangeFor("email")}
 						/>
+						<div data-test="email-error"></div>
 					</div>
 					<div>
 						<h2>Change Password</h2>
@@ -70,7 +74,10 @@ class AccountSettings extends Component {
 							value={this.state.confirmPassword}
 							onChange={this.handleChangeFor("confirmPassword")}
 						/>
+						<div data-test="password-error"></div>
 					</div>
+
+					<button type="submit">Confirm</button>
 				</form>
 			</div>
 		) : (

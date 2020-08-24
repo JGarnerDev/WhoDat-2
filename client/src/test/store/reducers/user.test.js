@@ -9,18 +9,17 @@ describe("User reducer", () => {
 			expect(userReducer).toBeDefined();
 		});
 		it("returns default state `{ isAuth: false }` when no action type case is matched", () => {
-			const previousState = undefined;
+			const defaultState = userReducer(undefined, {});
 			const action = { type: actionTypes.FOO, payload: "BAR" };
-			const defaultState = userReducer(previousState, action);
-			const expected = { isAuth: false };
+			const updatedState = userReducer(defaultState, action);
 
-			expect(defaultState).toEqual(expected);
+			expect(updatedState).toEqual(defaultState);
 		});
 	});
 
 	describe("USER_REGISTER action type", () => {
 		it("should only update register.success and register.message if registration fails", () => {
-			const previousState = undefined;
+			const defaultState = userReducer(undefined, {});
 			const action = {
 				type: actionTypes.USER_REGISTER,
 				payload: {
@@ -30,7 +29,7 @@ describe("User reducer", () => {
 					},
 				},
 			};
-			const updatedState = userReducer(previousState, action);
+			const updatedState = userReducer(defaultState, action);
 			const expected = {
 				isAuth: false,
 				register: {
@@ -38,10 +37,10 @@ describe("User reducer", () => {
 					message: "A user with that email already exists!",
 				},
 			};
-			expect(updatedState).toEqual(expected);
+			expect(updatedState).toEqual({ ...defaultState, ...expected });
 		});
 		it("should update the user state with names, email, role, id, and characters (empty array)", () => {
-			const previousState = undefined;
+			const defaultState = userReducer(undefined, {});
 			const userDoc = {
 				name: "foo",
 				lastname: "bar",
@@ -57,7 +56,7 @@ describe("User reducer", () => {
 					},
 				},
 			};
-			const updatedState = userReducer(previousState, action);
+			const updatedState = userReducer(defaultState, action);
 			const expected = {
 				isAuth: true,
 				register: {
@@ -66,7 +65,7 @@ describe("User reducer", () => {
 				},
 				...userDoc,
 			};
-			expect(updatedState).toEqual(expected);
+			expect(updatedState).toEqual({ ...defaultState, ...expected });
 		});
 	});
 	describe("USER_UPDATE action type", () => {
@@ -100,7 +99,7 @@ describe("User reducer", () => {
 	});
 	describe("USER_AUTH action type", () => {
 		it("will update `user` value with the action payload when there is no previous value", () => {
-			const previousState = undefined;
+			const defaultState = userReducer(undefined, {});
 			const action = {
 				type: actionTypes.USER_AUTH,
 				payload: {
@@ -112,7 +111,7 @@ describe("User reducer", () => {
 				},
 			};
 
-			const updatedState = userReducer(previousState, action);
+			const updatedState = userReducer(defaultState, action);
 			const expected = {
 				isAuth: true,
 				id: "123",
@@ -120,12 +119,12 @@ describe("User reducer", () => {
 				name: "Jack",
 				lastname: "Reginold",
 			};
-			expect(updatedState).toEqual(expected);
+			expect(updatedState).toEqual({ ...defaultState, ...expected });
 		});
 	});
 	describe("USER_LOGIN action type", () => {
-		it("will update `users` value with the action payload when there is no previous value", () => {
-			const previousState = undefined;
+		it("will update `user` value with the action payload when there is no previous value", () => {
+			const defaultState = userReducer(undefined, {});
 			const action = {
 				type: actionTypes.USER_LOGIN,
 				payload: {
@@ -137,7 +136,7 @@ describe("User reducer", () => {
 				},
 			};
 
-			const updatedState = userReducer(previousState, action);
+			const updatedState = userReducer(defaultState, action);
 			const expected = {
 				isAuth: true,
 				id: "123",
@@ -146,12 +145,13 @@ describe("User reducer", () => {
 				lastname: "Reginold",
 			};
 
-			expect(updatedState).toEqual(expected);
+			expect(updatedState).toEqual({ ...defaultState, ...expected });
 		});
 	});
 	describe("USER_LOGOUT action type", () => {
 		it("clears all information in the character state", () => {
 			// This action creator also performs a logout request to the server
+			const defaultState = userReducer(undefined, {});
 			const previousState = {
 				isAuth: true,
 				id: "123",
@@ -164,13 +164,14 @@ describe("User reducer", () => {
 			};
 
 			const updatedState = userReducer(previousState, action);
-			const expected = { isAuth: false };
-			expect(updatedState).toEqual(expected);
+
+			expect(updatedState).toEqual({ ...defaultState, logout: true });
 		});
 	});
 	describe("GLOBAL_STATE_RESET action type", () => {
 		it("clears all information in the redux state", () => {
 			// This action creator is shared with all reducers
+			const defaultState = userReducer(undefined, {});
 			const previousState = {
 				isAuth: true,
 				id: "123",
@@ -183,8 +184,8 @@ describe("User reducer", () => {
 			};
 
 			const updatedState = userReducer(previousState, action);
-			const expected = { isAuth: false };
-			expect(updatedState).toEqual(expected);
+
+			expect(updatedState).toEqual(defaultState);
 		});
 	});
 });
