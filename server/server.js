@@ -85,7 +85,6 @@ app.get("/api/characters", (req, res) => {
 
 app.get("/api/author_get", (req, res) => {
 	User.findById(req.body._id, (err, user) => {
-		console.log("AAAAAAA", user);
 		if (err) {
 			return res.status(400).send(err);
 		} else if (user == null) {
@@ -126,15 +125,12 @@ app.get("/api/user", (req, res) => {
 	User.findById(req.body._id, (err, user) => {
 		if (err || user === null)
 			return res.json({
-				error: true,
+				success: false,
 				message: "Unfortunately, we couldn't find this user!",
 			});
 		res.send({
-			name: user.name,
-			lastname: user.lastname,
-			email: user.email,
-			characters: user.characters,
-			characterAmount: user.characters.length,
+			success: true,
+			user,
 		});
 	});
 });
@@ -142,13 +138,16 @@ app.get("/api/user", (req, res) => {
 // Retrieve a user's characters
 
 app.get("/api/characters_user_get", (req, res) => {
-	Character.find({ authorId: req.body.authorId }).exec((err, docs) => {
+	Character.find({ authorId: req.body.authorId }).exec((err, characters) => {
 		if (err)
 			return res.json({
 				success: false,
 				message: "Unfortunately, we couldn't find this user's characters.",
 			});
-		res.send(docs);
+		res.send({
+			success: true,
+			characters,
+		});
 	});
 });
 
@@ -159,11 +158,12 @@ app.get("/api/logout", auth, (req, res) => {
 		if (err) {
 			return res.json({
 				success: false,
+				err: err,
 				message:
 					"There was an error in logging you out. You might bealready logged out - you can't log out any harder.",
 			});
 		}
-		res.json({ success: true, message: "Goodbye!" });
+		res.json({ success: true });
 	});
 });
 
@@ -172,7 +172,6 @@ app.get("/api/logout", auth, (req, res) => {
 // Creating a new user
 
 app.post("/api/register", (req, res) => {
-	console.log(req.body);
 	if (
 		req.body.password === undefined ||
 		req.body.username === undefined ||
