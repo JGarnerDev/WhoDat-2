@@ -603,10 +603,66 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			//
-			describe("User update", () => {});
-			//
-			describe("User deletion", () => {});
+			// done 
+			describe("User update", () => {
+				// at the user_update endpoint
+				it('responds with a success value and message if the user cannot be found by _id', async (done) => {
+					await request(server).post('/api/user_update').send({
+						_id: "WRONG"
+					}).expect((res) => {
+						expect(res.body.success).toBe(false)
+						expect(res.body.message).toBe("Unfortunately, there was an error in locating your user file for update.")
+					})
+
+					done()
+				});
+				it('responds with a success value and the user information if the user can be found by _id and updated', async (done) => {
+					// Make and save a user
+					const user = makeUser()
+
+					await user.save()
+					// Alter user information 
+					user.username = "IAMUPDATED"
+					// send information to endpoint
+
+
+					await request(server).post('/api/user_update').send(user).expect((res) => {
+						expect(res.body.success).toBe(true)
+						expect(res.body.user.username).toBe("IAMUPDATED")
+						expect(res.body.user.email).toBe(user.email)
+						expect(res.body.user.password).toBe(user.password)
+
+					})
+
+					await User.deleteOne({});
+					done()
+				});
+			});
+			// done
+			describe("User deletion", () => {
+				it('responds with a success value and a message when the user account could not be found or deleted', async (done) => {
+					let user = makeUser()
+					user._id = "WRONG"
+
+					await request(server).delete('/api/user_delete').send(user).expect(res => {
+
+						expect(res.body.success).toBe(false)
+						expect(res.body.message).toBe("Unfortunately, there was an error in locating your account for deletion.")
+					})
+					done()
+				});
+				it('responds with a success value and a message when the user account could be found and deleted', async (done) => {
+					let user = makeUser()
+					await user.save()
+
+					await request(server).delete('/api/user_delete').send(user).expect(res => {
+
+						expect(res.body.success).toBe(true)
+						expect(res.body.message).toBe(`The account for ${user.username} was successfully deleted!`)
+					})
+					done()
+				});
+			});
 			//
 			describe("Users list", () => {});
 			//

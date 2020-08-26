@@ -995,11 +995,125 @@ describe.only("App (server) test", function () {
             }
           });
         });
+      }); // done 
+
+      describe("User update", function () {
+        // at the user_update endpoint
+        it('responds with a success value and message if the user cannot be found by _id', function _callee30(done) {
+          return regeneratorRuntime.async(function _callee30$(_context31) {
+            while (1) {
+              switch (_context31.prev = _context31.next) {
+                case 0:
+                  _context31.next = 2;
+                  return regeneratorRuntime.awrap(request(server).post('/api/user_update').send({
+                    _id: "WRONG"
+                  }).expect(function (res) {
+                    expect(res.body.success).toBe(false);
+                    expect(res.body.message).toBe("Unfortunately, there was an error in locating your user file for update.");
+                  }));
+
+                case 2:
+                  done();
+
+                case 3:
+                case "end":
+                  return _context31.stop();
+              }
+            }
+          });
+        });
+        it('responds with a success value and the user information if the user can be found by _id and updated', function _callee31(done) {
+          var user;
+          return regeneratorRuntime.async(function _callee31$(_context32) {
+            while (1) {
+              switch (_context32.prev = _context32.next) {
+                case 0:
+                  // Make and save a user
+                  user = makeUser();
+                  _context32.next = 3;
+                  return regeneratorRuntime.awrap(user.save());
+
+                case 3:
+                  // Alter user information 
+                  user.username = "IAMUPDATED"; // send information to endpoint
+
+                  _context32.next = 6;
+                  return regeneratorRuntime.awrap(request(server).post('/api/user_update').send(user).expect(function (res) {
+                    expect(res.body.success).toBe(true);
+                    expect(res.body.user.username).toBe("IAMUPDATED");
+                    expect(res.body.user.email).toBe(user.email);
+                    expect(res.body.user.password).toBe(user.password);
+                  }));
+
+                case 6:
+                  _context32.next = 8;
+                  return regeneratorRuntime.awrap(User.deleteOne({}));
+
+                case 8:
+                  done();
+
+                case 9:
+                case "end":
+                  return _context32.stop();
+              }
+            }
+          });
+        });
+      }); // done
+
+      describe("User deletion", function () {
+        it('responds with a success value and a message when the user account could not be found or deleted', function _callee32(done) {
+          var user;
+          return regeneratorRuntime.async(function _callee32$(_context33) {
+            while (1) {
+              switch (_context33.prev = _context33.next) {
+                case 0:
+                  user = makeUser();
+                  user._id = "WRONG";
+                  _context33.next = 4;
+                  return regeneratorRuntime.awrap(request(server)["delete"]('/api/user_delete').send(user).expect(function (res) {
+                    expect(res.body.success).toBe(false);
+                    expect(res.body.message).toBe("Unfortunately, there was an error in locating your account for deletion.");
+                  }));
+
+                case 4:
+                  done();
+
+                case 5:
+                case "end":
+                  return _context33.stop();
+              }
+            }
+          });
+        });
+        it('responds with a success value and a message when the user account could be found and deleted', function _callee33(done) {
+          var user;
+          return regeneratorRuntime.async(function _callee33$(_context34) {
+            while (1) {
+              switch (_context34.prev = _context34.next) {
+                case 0:
+                  user = makeUser();
+                  _context34.next = 3;
+                  return regeneratorRuntime.awrap(user.save());
+
+                case 3:
+                  _context34.next = 5;
+                  return regeneratorRuntime.awrap(request(server)["delete"]('/api/user_delete').send(user).expect(function (res) {
+                    expect(res.body.success).toBe(true);
+                    expect(res.body.message).toBe("The account for ".concat(user.username, " was successfully deleted!"));
+                  }));
+
+                case 5:
+                  done();
+
+                case 6:
+                case "end":
+                  return _context34.stop();
+              }
+            }
+          });
+        });
       }); //
-
-      describe("User update", function () {}); //
-
-      describe("User deletion", function () {}); //
 
       describe("Users list", function () {}); //
 

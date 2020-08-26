@@ -316,17 +316,16 @@ app.post("/api/user_update", (req, res) => {
     req.body, {
       new: true
     },
-    (err, userData) => {
-      if (err) {
+    (err, user) => {
+      if (err || !user) {
         return res.json({
           success: false,
-          error: err,
-          message: "Unfortunately, there was an error in locating your user file for update. ",
+          message: "Unfortunately, there was an error in locating your user file for update.",
         });
       }
       res.json({
         success: true,
-        userData,
+        user,
       });
     }
   );
@@ -352,14 +351,14 @@ app.post("/api/character_update", (req, res) => {
 
 app.delete("/api/user_delete", (req, res) => {
   User.findByIdAndRemove(req.body._id, (err, doc) => {
-    if (err || doc === null)
+    if (err || !doc)
       return res.json({
         success: false,
-        message: "Unfortunately, there was an error in locating your account for deletion. ",
+        message: "Unfortunately, there was an error in locating your account for deletion.",
       });
     res.json({
       success: true,
-      message: `The account for ${req.body.email} was successfully deleted!`,
+      message: `The account for ${req.body.username} was successfully deleted!`,
     });
   });
 });
