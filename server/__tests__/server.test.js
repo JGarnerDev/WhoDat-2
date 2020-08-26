@@ -1,11 +1,13 @@
-const { json } = require("body-parser");
-
-var request = require("supertest"),
-	app = require("../server"),
-	mongoose = require("mongoose"),
-	mongoDB = `mongodb+srv://${process.env.DBcharacter}:${process.env.DBPASS}@whodat.iydrs.mongodb.net/${process.env.CHARDB}?retryWrites=true&w=majority`,
-	{ Character } = require("../models/character"),
-	{ User } = require("../models/user");
+var request = require("supertest")
+var app = require("../server")
+var mongoose = require("mongoose")
+const mongoDB = `mongodb+srv://${process.env.DBcharacter}:${process.env.DBPASS}@whodat.iydrs.mongodb.net/${process.env.CHARDB}?retryWrites=true&w=majority`
+const {
+	Character
+} = require("../models/character")
+const {
+	User
+} = require("../models/user");
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoDB, {
@@ -41,6 +43,7 @@ describe.only("App (server) test", () => {
 	describe("User routes test", () => {
 		// Black box tests to make sure the endpoints are present
 		describe("GET", () => {
+
 			it("can recieve a request for authentication", async (done) => {
 				await request(server).get("/api/auth").expect(200);
 				done();
@@ -389,7 +392,10 @@ describe.only("App (server) test", () => {
 						class: "druid",
 						level: 1,
 						short_description: "A bear",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					const character2 = new Character({
 						name: "Foo2",
@@ -398,7 +404,10 @@ describe.only("App (server) test", () => {
 						class: "fighter",
 						level: 2,
 						short_description: "A pirate",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					const character3 = new Character({
 						name: "Foo3",
@@ -407,7 +416,10 @@ describe.only("App (server) test", () => {
 						class: "rogue",
 						level: 3,
 						short_description: "A librarian",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					user.characters = [character1, character2, character3];
 
@@ -418,7 +430,9 @@ describe.only("App (server) test", () => {
 					// make a user information request by id
 					await request(server)
 						.get("/api/user")
-						.send({ _id: user._id })
+						.send({
+							_id: user._id
+						})
 						.expect((res) => {
 							// Note: would have preferred to just compare the user objects,
 							// 	but Mongo returns it's own object types that I couldn't
@@ -456,7 +470,9 @@ describe.only("App (server) test", () => {
 				it("responds with a success value and a message when not successful", async (done) => {
 					await request(server)
 						.get("/api/user")
-						.send({ _id: "Wrong" })
+						.send({
+							_id: "Wrong"
+						})
 						.expect((res) => {
 							expect(res.body.success).toBe(false);
 							expect(res.body.message).toBe(
@@ -466,7 +482,7 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			//
+			// done
 			describe("User characters retrieval", () => {
 				it("successfully retrieves the characters by authorId", async (done) => {
 					let user = makeUser();
@@ -477,7 +493,10 @@ describe.only("App (server) test", () => {
 						class: "druid",
 						level: 1,
 						short_description: "test",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					const character2 = new Character({
 						name: "Foo2",
@@ -486,7 +505,10 @@ describe.only("App (server) test", () => {
 						class: "fighter",
 						level: 2,
 						short_description: "test",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					const character3 = new Character({
 						name: "Foo3",
@@ -495,7 +517,10 @@ describe.only("App (server) test", () => {
 						class: "rogue",
 						level: 3,
 						short_description: "test",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					const someOtherUserCharacter1 = new Character({
 						name: "Wrong",
@@ -504,7 +529,10 @@ describe.only("App (server) test", () => {
 						class: "rogue",
 						level: 3,
 						short_description: "test",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 					const someOtherUserCharacter2 = new Character({
 						name: "Wrong",
@@ -513,7 +541,10 @@ describe.only("App (server) test", () => {
 						class: "rogue",
 						level: 3,
 						short_description: "test",
-						character_data: { something: {}, somethingElse: [] },
+						character_data: {
+							something: {},
+							somethingElse: []
+						},
 					});
 
 					user.characters = [character1, character2, character3];
@@ -527,18 +558,48 @@ describe.only("App (server) test", () => {
 
 					await request(server)
 						.get("/api/characters_user_get")
-						.send({ authorId: user._id })
+						.send({
+							authorId: user._id
+						})
 						.expect((res) => {
-							const actualCharacters = res.body.characters;
+							// expect there to be a success value of true
+							expect(res.body.success).toBe(true)
+
 							// expect the right number of characters
+							const actualCharacters = res.body.characters;
+
 							expect(actualCharacters.length).toBe(user.characters.length);
 							// expect the right characters
-							actualCharacters.forEach((character) => {
-								expect(character.name);
+							actualCharacters.forEach((character, i) => {
+								expect(character.name).toBe(`Foo${i+1}`)
 							});
 						});
 					await User.deleteOne({});
-					await Character.deleteMany({ short_description: "test" });
+					await Character.deleteMany({
+						short_description: "test"
+					});
+					done();
+				});
+
+				it("responds correctly if no characters are found", async (done) => {
+
+
+
+					await request(server)
+						.get("/api/characters_user_get")
+						.send({
+							authorId: "WRONG"
+						})
+						.expect((res) => {
+							const actual = res.body
+							expect(actual).toEqual({
+								success: true,
+								message: `No characters found by requested author`
+							})
+						});
+
+					await User.deleteOne({});
+
 					done();
 				});
 			});
