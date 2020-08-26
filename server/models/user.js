@@ -1,14 +1,12 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { use } = require("bcrypt/promises");
 const SALT_I = 10;
 
 const userSchema = mongoose.Schema({
 	email: { type: String, required: true, trim: true, unique: 1 },
 	password: { type: String, required: true, trim: true, minlength: 6 },
-	username: { type: String, maxlength: 100, required: true, unique: 1 },
-	role: { type: Number, default: 0 },
+	username: { type: String, required: true, maxlength: 100, unique: 1 },
 	token: { type: String },
 	characters: { type: Array },
 });

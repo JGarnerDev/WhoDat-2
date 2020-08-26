@@ -13,7 +13,11 @@ describe("User reducer", () => {
 			const action = { type: actionTypes.FOO, payload: "BAR" };
 			const updatedState = userReducer(defaultState, action);
 
-			expect(updatedState).toEqual(defaultState);
+			expect(updatedState).toEqual({
+				isAuth: false,
+				logout: false,
+				notifications: { welcome: 0, goodbye: 0, errmessage: "" },
+			});
 		});
 	});
 
@@ -131,8 +135,6 @@ describe("User reducer", () => {
 					isAuth: true,
 					id: "123",
 					email: "no@gmail.com",
-					name: "Jack",
-					lastname: "Reginold",
 				},
 			};
 
@@ -141,8 +143,6 @@ describe("User reducer", () => {
 				isAuth: true,
 				id: "123",
 				email: "no@gmail.com",
-				name: "Jack",
-				lastname: "Reginold",
 			};
 
 			expect(updatedState).toEqual({ ...defaultState, ...expected });
@@ -156,8 +156,6 @@ describe("User reducer", () => {
 				isAuth: true,
 				id: "123",
 				email: "no@gmail.com",
-				name: "Jack",
-				lastname: "Reginold",
 			};
 			const action = {
 				type: actionTypes.USER_LOGOUT,

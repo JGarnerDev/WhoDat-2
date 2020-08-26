@@ -48,9 +48,6 @@ app.get("/api/auth", auth, (req, res) => {
 	res.json({
 		isAuth: true,
 		_id: req.user._id,
-		email: req.user.email,
-		name: req.user.name,
-		lastname: req.user.lastname,
 	});
 });
 
@@ -88,13 +85,18 @@ app.get("/api/characters", (req, res) => {
 
 app.get("/api/author_get", (req, res) => {
 	User.findById(req.body._id, (err, user) => {
-		if (err) return res.status(400).send(err);
-		if (!user) user = { name: "unknown", lastname: "user" };
-		res.send({
-			name: user.name,
-			lastname: user.lastname,
-			characterAmount: user.characters.length,
-		});
+		console.log("AAAAAAA", user);
+		if (err) {
+			return res.status(400).send(err);
+		} else if (user == null) {
+			res.send({ success: false, username: "unknown" });
+		} else {
+			res.send({
+				success: true,
+				username: user.username,
+				characterAmount: user.characters.length,
+			});
+		}
 	});
 });
 
@@ -102,9 +104,9 @@ app.get("/api/author_get", (req, res) => {
 
 app.get("/api/users_get", async (req, res) => {
 	const pipeline = [
-		{ $skip: req.body.skip },
-		{ $limit: req.body.limit },
-		{ $sort: req.body.order },
+		{ $skip: req.body.skip || 0 },
+		{ $limit: req.body.limit || 20 },
+		{ $sort: { _id: req.body.order || -1 } },
 		{
 			$project: {
 				name: "$name",
@@ -170,20 +172,57 @@ app.get("/api/logout", auth, (req, res) => {
 // Creating a new user
 
 app.post("/api/register", (req, res) => {
+	console.log(req.body);
+	if (
+		req.body.password === undefined ||
+		req.body.username === undefined ||
+		req.body.email === undefined
+	) {
+		return res.json({
+			success: false,
+			message: "Required account information is missing",
+		});
+	}
+	if (req.body.password.length < 6) {
+		return res.json({
+			success: false,
+			message: "Submitted password is too short",
+		});
+	}
+	if (req.body.username.length > 100) {
+		return res.json({
+			success: false,
+			message: "Submitted username is too big",
+		});
+	}
 	const user = new User(req.body);
 
-	user.save((err, doc) => {
+	user.save((err, userDoc) => {
 		if (err) {
-			console.log(err);
-			return res.json({
-				success: false,
-				message: "An account with that email already exists! ",
-			});
+			const conflictingValue = Object.keys(err.keyPattern)[0];
+			switch (conflictingValue) {
+				case "email":
+					return res.json({
+						success: false,
+						message: "An account with that email already exists! ",
+					});
+				case "username":
+					return res.json({
+						success: false,
+						message: "An account with that username already exists! ",
+					});
+
+				default:
+					return res.json({
+						success: false,
+						message: "An unknown error occurred in registering your account",
+					});
+			}
 		}
-		delete doc.password;
+		delete userDoc.password;
 		res.status(200).json({
 			success: true,
-			doc,
+			userDoc,
 		});
 	});
 });
@@ -212,8 +251,6 @@ app.post("/api/login", (req, res) => {
 					_id: user._id,
 					email: user.email,
 					username: user.username,
-					name: user.name,
-					lastname: user.lastname,
 				});
 			});
 		});
@@ -240,14 +277,12 @@ app.post("/api/character", (req, res) => {
 // UPDATE //
 
 app.post("/api/user_update", (req, res) => {
-	console.log(req.body);
 	User.findByIdAndUpdate(
 		req.body._id,
 		req.body,
 		{ new: true },
 		(err, userData) => {
 			if (err) {
-				console.log(err);
 				return res.json({
 					success: false,
 					error: err,
@@ -255,7 +290,6 @@ app.post("/api/user_update", (req, res) => {
 						"Unfortunately, there was an error in locating your user file for update. ",
 				});
 			}
-			console.log(userData);
 			res.json({
 				success: true,
 				userData,
@@ -313,10 +347,10 @@ app.delete("/api/character_delete", (req, res) => {
 
 // vvv Runs server on port vvv
 
-app.listen(port, () => {
-	console.log(`Server running on port ${port}`);
-});
+// app.listen(port, () => {
+// 	console.log(`Server running on port ${port}`);
+// });
 
 // vvv Makes server available for testing vvv
 
-// module.exports = app;
+module.exports = app;

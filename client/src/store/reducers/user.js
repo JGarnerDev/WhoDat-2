@@ -2,8 +2,7 @@ export default function (
 	state = {
 		isAuth: false,
 		logout: false,
-		welcomeNotified: 0,
-		goodbyeNotified: 0,
+		notifications: { welcome: 0, goodbye: 0, errmessage: "" },
 	},
 	action
 ) {
@@ -25,17 +24,24 @@ export default function (
 			};
 		case "USER_UPDATE":
 			let updatedUser;
-			if (action.payload.data.userData) {
-				updatedUser = action.payload.data.userData;
+			if (action.payload.userData) {
+				updatedUser = action.payload.userData;
 				delete updatedUser.token;
 				delete updatedUser.password;
+				return {
+					...state,
+					...updatedUser,
+					updated: {
+						success: action.payload.success,
+						message: action.payload.message,
+					},
+				};
 			}
 			return {
 				...state,
-				...updatedUser,
 				updated: {
-					success: action.payload.data.success,
-					message: action.payload.data.message,
+					success: action.payload.success,
+					message: action.payload.message,
 				},
 			};
 		case "USER_DELETE":
@@ -46,15 +52,12 @@ export default function (
 			return {
 				...state,
 				...action.payload,
-				welcomeNotified: 0,
-				goodbyeNotified: 0,
 			};
 		case "USER_LOGOUT":
 			return {
 				isAuth: false,
 				logout: true,
-				welcomeNotified: 0,
-				goodbyeNotified: 0,
+				notifications: { welcome: 0, goodbye: 0, errmessage: "" },
 			};
 		case "USER_WELCOME_NOTIFY":
 			return { ...state, welcomeNotified: state.welcomeNotified + 1 };
@@ -64,8 +67,7 @@ export default function (
 			return {
 				isAuth: false,
 				logout: false,
-				welcomeNotified: 0,
-				goodbyeNotified: 0,
+				notifications: { welcome: 0, goodbye: 0, errmessage: "" },
 			};
 		default:
 			return state;
