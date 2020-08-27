@@ -743,9 +743,93 @@ describe.only("App (server) test", () => {
 
 					done();
 				});
+				it("correctly sends a success value and a message if saving was unsuccessful", async (done) => {
+					const user = makeUser();
+
+					const characterData = {
+						name: "Foo",
+						authorName: user.username,
+						authorId: user._id,
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					};
+
+					// Deleting required information
+					delete characterData.name;
+					delete characterData.class;
+					delete characterData.level;
+
+					let idFromResponse;
+
+					await request(server)
+						.post("/api/character")
+						.send(characterData)
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.message).toBe(
+								"Unfortunately, there was an error in creating this character."
+							);
+							idFromResponse = res.body._id;
+						});
+
+					expect(idFromResponse).toBe(undefined);
+
+					await Character.deleteOne({});
+
+					done();
+				});
 			});
-			//
-			describe("Character retrieval", () => {});
+			// done
+			describe("Character retrieval", () => {
+				it("responds with a character and a success value if successful", async (done) => {
+					const user = makeUser();
+					const character = new Character({
+						name: "Foo",
+						authorName: user.username,
+						authorId: user._id,
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+
+					await character.save();
+					user.characters.push(character._id);
+					await request(server)
+						.get("/api/character")
+						.send({ _id: user.characters[0] })
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.character.name).toBe(character.name);
+							expect(res.body.character.name).toBe(character.name);
+						});
+
+					await Character.deleteOne({});
+					done();
+				});
+				it("responds with a success value and a message if unsuccessful", async (done) => {
+					const user = makeUser();
+
+					const badCharacterId = "123";
+
+					user.characters.push(badCharacterId);
+
+					await request(server)
+						.get("/api/character")
+						.send({ _id: user.characters[0] })
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.message).toBe(
+								"Unfortunately, we couldn't find this character."
+							);
+						});
+
+					await Character.deleteOne({});
+					done();
+				});
+			});
 			//
 			describe("Character author metadata retrieval", () => {});
 			//

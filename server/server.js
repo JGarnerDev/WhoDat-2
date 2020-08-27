@@ -56,15 +56,15 @@ app.get("/api/auth", auth, (req, res) => {
 app.get("/api/character", (req, res) => {
 	Character.findOne(
 		{
-			authorId: req.body._id,
+			_id: req.body._id,
 		},
-		(err, characterObj) => {
+		(err, character) => {
 			if (err)
 				return res.json({
 					success: false,
 					message: "Unfortunately, we couldn't find this character.",
 				});
-			res.send(characterObj);
+			res.json({ success: true, character });
 		}
 	);
 });
