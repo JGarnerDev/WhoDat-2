@@ -1,13 +1,10 @@
-var request = require("supertest")
-var app = require("../server")
-var mongoose = require("mongoose")
-const mongoDB = `mongodb+srv://${process.env.DBcharacter}:${process.env.DBPASS}@whodat.iydrs.mongodb.net/${process.env.CHARDB}?retryWrites=true&w=majority`
-const {
-	Character
-} = require("../models/character")
-const {
-	User
-} = require("../models/user");
+var request = require("supertest");
+var app = require("../server");
+var mongoose = require("mongoose");
+const mongoDB = `mongodb+srv://${process.env.DBcharacter}:${process.env.DBPASS}@whodat.iydrs.mongodb.net/${process.env.CHARDB}?retryWrites=true&w=majority`;
+const { Character } = require("../models/character");
+const { User } = require("../models/user");
+const user = require("../models/user");
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoDB, {
@@ -15,11 +12,15 @@ mongoose.connect(mongoDB, {
 	useUnifiedTopology: true,
 });
 
-function makeUser() {
+function makeUser(
+	username = "FooBar",
+	password = "Password",
+	email = "hello@hotmail.com"
+) {
 	return new User({
-		email: "hello@hotmail.com",
-		password: "Password",
-		username: "FooBar",
+		email: email,
+		password: password,
+		username: username,
 		characters: [],
 	});
 }
@@ -36,6 +37,9 @@ describe.only("App (server) test", () => {
 	});
 
 	afterAll(async (done) => {
+		await Character.deleteOne({});
+		await Character.deleteOne({});
+		await Character.deleteOne({});
 		await mongoose.connection.close();
 		await server.close(done());
 	});
@@ -43,7 +47,6 @@ describe.only("App (server) test", () => {
 	describe("User routes test", () => {
 		// Black box tests to make sure the endpoints are present
 		describe("GET", () => {
-
 			it("can recieve a request for authentication", async (done) => {
 				await request(server).get("/api/auth").expect(200);
 				done();
@@ -394,7 +397,7 @@ describe.only("App (server) test", () => {
 						short_description: "A bear",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					const character2 = new Character({
@@ -406,7 +409,7 @@ describe.only("App (server) test", () => {
 						short_description: "A pirate",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					const character3 = new Character({
@@ -418,7 +421,7 @@ describe.only("App (server) test", () => {
 						short_description: "A librarian",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					user.characters = [character1, character2, character3];
@@ -431,7 +434,7 @@ describe.only("App (server) test", () => {
 					await request(server)
 						.get("/api/user")
 						.send({
-							_id: user._id
+							_id: user._id,
 						})
 						.expect((res) => {
 							// Note: would have preferred to just compare the user objects,
@@ -471,7 +474,7 @@ describe.only("App (server) test", () => {
 					await request(server)
 						.get("/api/user")
 						.send({
-							_id: "Wrong"
+							_id: "Wrong",
 						})
 						.expect((res) => {
 							expect(res.body.success).toBe(false);
@@ -495,7 +498,7 @@ describe.only("App (server) test", () => {
 						short_description: "test",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					const character2 = new Character({
@@ -507,7 +510,7 @@ describe.only("App (server) test", () => {
 						short_description: "test",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					const character3 = new Character({
@@ -519,7 +522,7 @@ describe.only("App (server) test", () => {
 						short_description: "test",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					const someOtherUserCharacter1 = new Character({
@@ -531,7 +534,7 @@ describe.only("App (server) test", () => {
 						short_description: "test",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 					const someOtherUserCharacter2 = new Character({
@@ -543,7 +546,7 @@ describe.only("App (server) test", () => {
 						short_description: "test",
 						character_data: {
 							something: {},
-							somethingElse: []
+							somethingElse: [],
 						},
 					});
 
@@ -559,11 +562,11 @@ describe.only("App (server) test", () => {
 					await request(server)
 						.get("/api/characters_user_get")
 						.send({
-							authorId: user._id
+							authorId: user._id,
 						})
 						.expect((res) => {
 							// expect there to be a success value of true
-							expect(res.body.success).toBe(true)
+							expect(res.body.success).toBe(true);
 
 							// expect the right number of characters
 							const actualCharacters = res.body.characters;
@@ -571,31 +574,30 @@ describe.only("App (server) test", () => {
 							expect(actualCharacters.length).toBe(user.characters.length);
 							// expect the right characters
 							actualCharacters.forEach((character, i) => {
-								expect(character.name).toBe(`Foo${i+1}`)
+								expect(character.name).toBe(`Foo${i + 1}`);
 							});
 						});
 					await User.deleteOne({});
-					await Character.deleteMany({
-						short_description: "test"
-					});
+					await User.deleteOne({});
+					await User.deleteOne({});
+					await Character.deleteOne({});
+					await Character.deleteOne({});
+
 					done();
 				});
 
 				it("responds correctly if no characters are found", async (done) => {
-
-
-
 					await request(server)
 						.get("/api/characters_user_get")
 						.send({
-							authorId: "WRONG"
+							authorId: "WRONG",
 						})
 						.expect((res) => {
-							const actual = res.body
+							const actual = res.body;
 							expect(actual).toEqual({
 								success: true,
-								message: `No characters found by requested author`
-							})
+								message: `No characters found by requested author`,
+							});
 						});
 
 					await User.deleteOne({});
@@ -603,70 +605,145 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			// done 
+			// done
 			describe("User update", () => {
 				// at the user_update endpoint
-				it('responds with a success value and message if the user cannot be found by _id', async (done) => {
-					await request(server).post('/api/user_update').send({
-						_id: "WRONG"
-					}).expect((res) => {
-						expect(res.body.success).toBe(false)
-						expect(res.body.message).toBe("Unfortunately, there was an error in locating your user file for update.")
-					})
+				it("responds with a success value and message if the user cannot be found by _id", async (done) => {
+					await request(server)
+						.post("/api/user_update")
+						.send({
+							_id: "WRONG",
+						})
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.message).toBe(
+								"Unfortunately, there was an error in locating your user file for update."
+							);
+						});
 
-					done()
+					done();
 				});
-				it('responds with a success value and the user information if the user can be found by _id and updated', async (done) => {
+				it("responds with a success value and the user information if the user can be found by _id and updated", async (done) => {
 					// Make and save a user
-					const user = makeUser()
+					const user = makeUser();
 
-					await user.save()
-					// Alter user information 
-					user.username = "IAMUPDATED"
+					await user.save();
+					// Alter user information
+					user.username = "IAMUPDATED";
 					// send information to endpoint
 
-
-					await request(server).post('/api/user_update').send(user).expect((res) => {
-						expect(res.body.success).toBe(true)
-						expect(res.body.user.username).toBe("IAMUPDATED")
-						expect(res.body.user.email).toBe(user.email)
-						expect(res.body.user.password).toBe(user.password)
-
-					})
+					await request(server)
+						.post("/api/user_update")
+						.send(user)
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.user.username).toBe("IAMUPDATED");
+							expect(res.body.user.email).toBe(user.email);
+							expect(res.body.user.password).toBe(user.password);
+						});
 
 					await User.deleteOne({});
-					done()
+					done();
 				});
 			});
 			// done
 			describe("User deletion", () => {
-				it('responds with a success value and a message when the user account could not be found or deleted', async (done) => {
-					let user = makeUser()
-					user._id = "WRONG"
+				it("responds with a success value and a message when the user account could not be found or deleted", async (done) => {
+					let user = makeUser();
+					user._id = "WRONG";
 
-					await request(server).delete('/api/user_delete').send(user).expect(res => {
-
-						expect(res.body.success).toBe(false)
-						expect(res.body.message).toBe("Unfortunately, there was an error in locating your account for deletion.")
-					})
-					done()
+					await request(server)
+						.delete("/api/user_delete")
+						.send(user)
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.message).toBe(
+								"Unfortunately, there was an error in locating your account for deletion."
+							);
+						});
+					done();
 				});
-				it('responds with a success value and a message when the user account could be found and deleted', async (done) => {
-					let user = makeUser()
-					await user.save()
+				it("responds with a success value and a message when the user account could be found and deleted", async (done) => {
+					let user = makeUser();
+					await user.save();
 
-					await request(server).delete('/api/user_delete').send(user).expect(res => {
-
-						expect(res.body.success).toBe(true)
-						expect(res.body.message).toBe(`The account for ${user.username} was successfully deleted!`)
-					})
-					done()
+					await request(server)
+						.delete("/api/user_delete")
+						.send(user)
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.message).toBe(
+								`The account for ${user.username} was successfully deleted!`
+							);
+						});
+					done();
 				});
 			});
-			//
-			describe("Users list", () => {});
-			//
-			describe("Character saving", () => {});
+			// done
+			describe("Users list", () => {
+				it("responds with a list of users aggregated properly", async (done) => {
+					const user1 = makeUser("Test1", "password", "test1@g.com");
+					const user2 = makeUser("Test2", "password", "test2@g.com");
+					const user3 = makeUser("Test3", "password", "test3@g.com");
+
+					await user1.save();
+					await user2.save();
+					await user3.save();
+
+					const reverseChronological = -1;
+
+					await request(server)
+						.get("/api/users_get")
+						.send({ skip: 0, limit: 2, order: reverseChronological })
+						.expect((res) => {
+							expect(res.body[0].username).toBe(user2.username);
+							expect(res.body[1].username).toBe(user1.username);
+							expect(res.body.length).toBe(2);
+						});
+
+					await User.deleteOne({});
+					await User.deleteOne({});
+					await User.deleteOne({});
+					done();
+				});
+			});
+			// done
+			describe("Character saving", () => {
+				it("correctly saves the character data on request", async (done) => {
+					const user = makeUser();
+
+					const characterData = {
+						name: "Foo",
+						authorName: user.username,
+						authorId: user._id,
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					};
+
+					let idFromResponse;
+
+					await request(server)
+						.post("/api/character")
+						.send(characterData)
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.message).toBe("Character saved!");
+							idFromResponse = res.body._id;
+						});
+
+					const retrievedCharacter = await Character.findById(idFromResponse);
+
+					expect(retrievedCharacter.name).toBe(characterData.name);
+					expect(retrievedCharacter.authorId).toBe(user._id.toString());
+					expect(retrievedCharacter.authorName).toBe(user.username);
+
+					await Character.deleteOne({});
+
+					done();
+				});
+			});
 			//
 			describe("Character retrieval", () => {});
 			//

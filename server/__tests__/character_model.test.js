@@ -29,6 +29,8 @@ describe("Character Model", () => {
 	});
 	afterEach(async (done) => {
 		await Character.deleteOne({});
+		await Character.deleteOne({});
+		await Character.deleteOne({});
 
 		done();
 	});
