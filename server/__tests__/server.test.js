@@ -45,88 +45,91 @@ describe.only("App (server) test", () => {
 	});
 
 	describe("User routes test", () => {
+		describe("Unit tests", () => {
+			describe("GET", () => {
+				it("can recieve a request for authentication", async (done) => {
+					await request(server).get("/api/auth").expect(200);
+					done();
+				});
+				it("can recieve a request for a single character", async (done) => {
+					await request(server).get("/api/character").expect(200);
+					done();
+				});
+				it("can respond with a list of characters", async (done) => {
+					await request(server).get("/api/characters_get").expect(200);
+					done();
+				});
+				it("can recieve a request for author metadata", async (done) => {
+					await request(server).get("/api/author_get").expect(200);
+					done();
+				});
+				it("can recieve a request for a list of all users", async (done) => {
+					await request(server).get("/api/users_get").expect(200);
+					done();
+				});
+				it("can recieve a request for the characters of a user", async (done) => {
+					await request(server).get("/api/characters_user_get").expect(200);
+					done();
+				});
+				it("can recieve a logout request", async (done) => {
+					await request(server).get("/api/logout").expect(200);
+					done();
+				});
+			});
+			describe("POST", () => {
+				it("can recieve requests for user registration", async (done) => {
+					await request(server).post("/api/register").expect(200);
+					done();
+				});
+				it("can recieve requests for logging in", async (done) => {
+					await request(server).post("/api/login").expect(200);
+					done();
+				});
+				it("can recieve requests for character creation", async (done) => {
+					let character = {
+						name: "Bob the Brave",
+						authorName: "character1",
+						authorId: "xxxxx",
+						class: "Bard",
+						level: 1,
+						character_data: {},
+					};
+					await request(server)
+						.post("/api/character")
+						.send(character)
+						.expect(200);
+					await Character.deleteOne({});
+					done();
+				});
+				it("can recieve requests for user updates", async (done) => {
+					await request(server).post("/api/user_update").expect(200);
+					done();
+				});
+				it("can recieve requests for character updates", async (done) => {
+					await request(server).post("/api/character_update").expect(200);
+					done();
+				});
+			});
+			describe("DELETE", () => {
+				it("can recieve requests for user account deletion", async (done) => {
+					await request(server).delete("/api/user_delete").expect(200);
+					done();
+				});
+				it("can recieve requests for user account deletion", async (done) => {
+					await request(server).delete("/api/character_delete").expect(200);
+					done();
+				});
+			});
+			describe("404", () => {
+				it("returns 404 when a non-existent route is requested", async (done) => {
+					await request(server).get("/fail").expect(404);
+					done();
+				});
+			});
+		});
 		// Black box tests to make sure the endpoints are present
-		describe("GET", () => {
-			it("can recieve a request for authentication", async (done) => {
-				await request(server).get("/api/auth").expect(200);
-				done();
-			});
-			it("can recieve a request for a single character", async (done) => {
-				await request(server).get("/api/character").expect(200);
-				done();
-			});
-			it("can respond with a list of characters", async (done) => {
-				await request(server).get("/api/characters").expect(200);
-				done();
-			});
-			it("can recieve a request for author metadata", async (done) => {
-				await request(server).get("/api/author_get").expect(200);
-				done();
-			});
-			it("can recieve a request for a list of all users", async (done) => {
-				await request(server).get("/api/users_get").expect(200);
-				done();
-			});
-			it("can recieve a request for the characters of a user", async (done) => {
-				await request(server).get("/api/characters_user_get").expect(200);
-				done();
-			});
-			it("can recieve a logout request", async (done) => {
-				await request(server).get("/api/logout").expect(200);
-				done();
-			});
-		});
-		describe("POST", () => {
-			it("can recieve requests for user registration", async (done) => {
-				await request(server).post("/api/register").expect(200);
-				done();
-			});
-			it("can recieve requests for logging in", async (done) => {
-				await request(server).post("/api/login").expect(200);
-				done();
-			});
-			it("can recieve requests for character creation", async (done) => {
-				let character = {
-					name: "Bob the Brave",
-					authorName: "character1",
-					authorId: "xxxxx",
-					class: "Bard",
-					level: 1,
-					character_data: {},
-				};
-				await request(server)
-					.post("/api/character")
-					.send(character)
-					.expect(200);
-				await Character.deleteOne({});
-				done();
-			});
-			it("can recieve requests for user updates", async (done) => {
-				await request(server).post("/api/user_update").expect(200);
-				done();
-			});
-			it("can recieve requests for character updates", async (done) => {
-				await request(server).post("/api/character_update").expect(200);
-				done();
-			});
-		});
-		describe("DELETE", () => {
-			it("can recieve requests for user account deletion", async (done) => {
-				await request(server).delete("/api/user_delete").expect(200);
-				done();
-			});
-			it("can recieve requests for user account deletion", async (done) => {
-				await request(server).delete("/api/character_delete").expect(200);
-				done();
-			});
-		});
-		describe("404", () => {
-			it("returns 404 when a non-existent route is requested", async (done) => {
-				await request(server).get("/fail").expect(404);
-				done();
-			});
-		});
-		describe("Responses and Validation", () => {
+
+		describe("Responses and Validation (intergration tests)", () => {
 			// done
 			describe("User registration", () => {
 				it("responds with `success: false` and a message if username is not unique", async (done) => {
@@ -487,7 +490,7 @@ describe.only("App (server) test", () => {
 			});
 			// done
 			describe("User characters retrieval", () => {
-				it("successfully retrieves the characters by authorId", async (done) => {
+				it("successfully retrieves the characters by user's _id", async (done) => {
 					let user = makeUser();
 					const character1 = new Character({
 						name: "Foo1",
@@ -562,7 +565,7 @@ describe.only("App (server) test", () => {
 					await request(server)
 						.get("/api/characters_user_get")
 						.send({
-							authorId: user._id,
+							_id: user._id,
 						})
 						.expect((res) => {
 							// expect there to be a success value of true
@@ -696,9 +699,9 @@ describe.only("App (server) test", () => {
 						.get("/api/users_get")
 						.send({ skip: 0, limit: 2, order: reverseChronological })
 						.expect((res) => {
-							expect(res.body[0].username).toBe(user2.username);
-							expect(res.body[1].username).toBe(user1.username);
-							expect(res.body.length).toBe(2);
+							expect(res.body.users[0].username).toBe(user2.username);
+							expect(res.body.users[1].username).toBe(user1.username);
+							expect(res.body.users.length).toBe(2);
 						});
 
 					await User.deleteOne({});
@@ -1015,7 +1018,79 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			//
+			// done
+			describe("Characters list", () => {
+				it("responds with success value and characters array when successful", async (done) => {
+					const character1 = new Character({
+						name: "Foo1",
+						authorName: "User",
+						authorId: "1111",
+						class: "fighter",
+						level: 1,
+						short_description: "test",
+						character_data: {
+							something: {},
+							somethingElse: [],
+						},
+					});
+					const character2 = new Character({
+						name: "Foo2",
+						authorName: "some other User",
+						authorId: "2222",
+						class: "cleric",
+						level: 2,
+						short_description: "test",
+						character_data: {
+							something: {},
+							somethingElse: [],
+						},
+					});
+					const character3 = new Character({
+						name: "Foo3",
+						authorName: "some User",
+						authorId: "3333",
+						class: "wizard",
+						level: 3,
+						short_description: "test",
+						character_data: {
+							something: {},
+							somethingElse: [],
+						},
+					});
+
+					await character1.save();
+					await character2.save();
+					await character3.save();
+
+					const limit = 2;
+					await request(server)
+						.get("/api/characters_get")
+						.send({ skip: 0, limit: limit, order: 1 })
+						.expect((res) => {
+							expect(res.body.characters.length).toBe(limit);
+							expect(res.body.characters[0].name).toBe(character1.name);
+							expect(res.body.characters[1].name).toBe(character2.name);
+						});
+
+					await Character.deleteOne({});
+					await Character.deleteOne({});
+					await Character.deleteOne({});
+
+					done();
+				});
+				it("responds with success value and message when unsuccessful", async (done) => {
+					await Character.deleteOne({});
+					await Character.deleteOne({});
+					await Character.deleteOne({});
+					await request(server)
+						.get("/api/characters_get")
+						.send({})
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+						});
+					done();
+				});
+			});
 		});
 	});
 });

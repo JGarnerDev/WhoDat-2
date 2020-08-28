@@ -71,21 +71,40 @@ app.get("/api/character", (req, res) => {
 
 // Retrieve a limited amount of characters from the entire collection
 
-app.get("/api/characters", (req, res) => {
-	let skip = req.body.skip;
-	let limit = req.body.limit;
-	let order = req.body.order;
+app.get("/api/characters_get", async (req, res) => {
+	const skip = req.body.skip || 0;
+	const limit = req.body.limit || 10;
+	const order = req.body.order || -1;
 
-	Character.find()
-		.skip(skip)
-		.sort({
-			updatedAt: order,
-		})
-		.limit(limit)
-		.exec((err, charactersArray) => {
-			if (err) return res.status(400).send(err);
-			res.send(charactersArray);
-		});
+	const pipeline = [
+		{
+			$skip: skip,
+		},
+		{
+			$limit: limit,
+		},
+		{
+			$sort: {
+				_id: order,
+			},
+		},
+		{
+			$project: {
+				name: "$name",
+				level: "$level",
+				class: "$class",
+				authorName: "$authorName",
+			},
+		},
+	];
+	//  aggregate(pipeline) comes back as an AggregationCursor, which requires .toArray() to translate it to a typical array of objects
+	const characters = await db.characters.aggregate(pipeline).toArray();
+	characters.length > 0
+		? res.json({ success: true, characters })
+		: res.json({
+				success: false,
+				message: "Couldn't retrieve any saved characters - try again soon!",
+		  });
 });
 
 // Retrieve character author meta
@@ -139,7 +158,12 @@ app.get("/api/users_get", async (req, res) => {
 	];
 	//  aggregate(pipeline) comes back as an AggregationCursor, which requires .toArray() to translate it to a typical array of objects
 	const users = await db.users.aggregate(pipeline).toArray();
-	res.json(users);
+	users.length
+		? res.json({ success: true, users })
+		: res.json({
+				success: false,
+				message: "Couldn't retrieve any registered users - try again soon!",
+		  });
 });
 
 // Retrieve a user
@@ -162,7 +186,7 @@ app.get("/api/user", (req, res) => {
 
 app.get("/api/characters_user_get", (req, res) => {
 	Character.find({
-		authorId: req.body.authorId,
+		authorId: req.body._id,
 	}).exec((err, characters) => {
 		if (err)
 			return res.json({
@@ -253,7 +277,7 @@ app.post("/api/register", (req, res) => {
 			}
 		}
 		delete userDoc.password;
-		res.status(200).json({
+		res.json({
 			success: true,
 			userDoc,
 		});
