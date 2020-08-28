@@ -92,18 +92,18 @@ app.get("/api/characters", (req, res) => {
 
 app.get("/api/author_get", (req, res) => {
 	User.findById(req.body._id, (err, user) => {
-		if (err) {
-			return res.status(400).send(err);
-		} else if (user == null) {
+		if (err || user == null) {
 			res.send({
 				success: false,
-				username: "unknown",
+				author: { username: "unknown" },
 			});
 		} else {
 			res.send({
 				success: true,
-				username: user.username,
-				characterAmount: user.characters.length,
+				author: {
+					username: user.username,
+					characterAmount: user.characters.length,
+				},
 			});
 		}
 	});

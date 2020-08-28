@@ -831,7 +831,65 @@ describe.only("App (server) test", () => {
 				});
 			});
 			//
-			describe("Character author metadata retrieval", () => {});
+			describe("Character author metadata retrieval", () => {
+				it("responds with a success and author values when request is successful ", async (done) => {
+					const user = makeUser();
+
+					const character = new Character({
+						name: "Foo",
+						authorName: user.username,
+						authorId: user._id,
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+					user.characters.push(character._id);
+					await user.save();
+					await character.save();
+
+					await request(server)
+						.get("/api/author_get")
+						.send({ _id: character.authorId })
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.author).toEqual({
+								username: user.username,
+								characterAmount: user.characters.length,
+							});
+						});
+
+					await User.deleteOne({});
+					await Character.deleteOne({});
+					done();
+				});
+				it("responds with a success and username: `unknown` when request is unsuccessful ", async (done) => {
+					const character = new Character({
+						name: "Foo",
+						authorName: "Wrong",
+						authorId: "Wrong",
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+
+					await character.save();
+
+					await request(server)
+						.get("/api/author_get")
+						.send({ _id: character.authorId })
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.author).toEqual({
+								username: "unknown",
+							});
+						});
+
+					await Character.deleteOne({});
+					done();
+				});
+			});
 			//
 			describe("Character updating", () => {});
 			//
