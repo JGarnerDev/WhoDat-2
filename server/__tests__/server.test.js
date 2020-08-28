@@ -830,7 +830,7 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			//
+			// done
 			describe("Character author metadata retrieval", () => {
 				it("responds with a success and author values when request is successful ", async (done) => {
 					const user = makeUser();
@@ -891,7 +891,57 @@ describe.only("App (server) test", () => {
 				});
 			});
 			//
-			describe("Character updating", () => {});
+			describe("Character updating", () => {
+				it("should respond with success and character values if update is successful", async (done) => {
+					let character = new Character({
+						name: "Foo",
+						authorName: "username",
+						authorId: "123",
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+					await character.save();
+
+					character.name = "UPDATED";
+
+					await request(server)
+						.post("/api/character_update")
+						.send(character)
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.character.name).toBe("UPDATED");
+						});
+
+					await Character.deleteOne({});
+					done();
+				});
+				it("should respond with success and message values if update is unsuccessful", async (done) => {
+					let character = new Character({
+						name: "Foo",
+						authorName: "username",
+						authorId: "123",
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+					await character.save();
+
+					await request(server)
+						.post("/api/character_update")
+						.send("wrong")
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.message).toBe(
+								"Unfortunately, there was an error in locating your character for updating."
+							);
+						});
+					await Character.deleteOne({});
+					done();
+				});
+			});
 			//
 			describe("Character deletion", () => {});
 			//

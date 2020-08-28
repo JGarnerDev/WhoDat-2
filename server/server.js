@@ -345,16 +345,16 @@ app.post("/api/character_update", (req, res) => {
 		{
 			new: true,
 		},
-		(err) => {
-			if (err)
+		(err, character) => {
+			if (!character)
 				return res.json({
 					success: false,
 					message:
-						"Unfortunately, there was an error in locating your character for updating. ",
+						"Unfortunately, there was an error in locating your character for updating.",
 				});
 			res.json({
 				success: true,
-				message: `${req.body.name} was successfully updated!`,
+				character: character,
 			});
 		}
 	);
