@@ -376,9 +376,10 @@ app.delete("/api/user_delete", (req, res) => {
 		});
 	});
 });
+
 app.delete("/api/character_delete", (req, res) => {
 	Character.findByIdAndRemove(req.body._id, (err, doc) => {
-		if (err || doc === null)
+		if (err || doc == null)
 			return res.json({
 				success: false,
 				message: `Unfortunately, there was an error in locating ${req.body.name} for deletion.`,

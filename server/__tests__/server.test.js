@@ -890,7 +890,7 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			//
+			// done
 			describe("Character updating", () => {
 				it("should respond with success and character values if update is successful", async (done) => {
 					let character = new Character({
@@ -942,8 +942,79 @@ describe.only("App (server) test", () => {
 					done();
 				});
 			});
-			//
-			describe("Character deletion", () => {});
+			// done
+			describe("Character deletion", () => {
+				it("responds with a success and message value if successful ", async (done) => {
+					const character = new Character({
+						name: "Foo",
+						authorName: "username",
+						authorId: "123",
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+
+					await character.save();
+
+					const confirmedSavedCharacter = await Character.findById(
+						character._id
+					);
+
+					expect(confirmedSavedCharacter._id.toString()).toBe(
+						character._id.toString()
+					);
+					await request(server)
+						.delete("/api/character_delete")
+						.send(character)
+						.expect((res) => {
+							expect(res.body.success).toBe(true);
+							expect(res.body.message).toBe(
+								`The character ${character.name} was successfully deleted!`
+							);
+						});
+
+					const characterThatShouldNotExist = await Character.findById(
+						character._id
+					);
+
+					expect(characterThatShouldNotExist).toBe(null);
+					await Character.deleteOne({});
+					done();
+				});
+				it("responds with a success and message value if unsuccessful ", async (done) => {
+					const character = new Character({
+						name: "Foo",
+						authorName: "username",
+						authorId: "123",
+						class: "Test",
+						level: 1,
+						short_description: "For testing",
+						character_data: { something: {}, somethingElse: [] },
+					});
+
+					await character.save();
+					await Character.deleteOne({});
+
+					const characterThatShouldNotExist = await Character.findById(
+						character._id
+					);
+
+					await request(server)
+						.delete("/api/character_delete")
+						.send(character)
+						.expect((res) => {
+							expect(res.body.success).toBe(false);
+							expect(res.body.message).toBe(
+								`Unfortunately, there was an error in locating ${character.name} for deletion.`
+							);
+						});
+
+					expect(characterThatShouldNotExist).toBe(null);
+					await Character.deleteOne({});
+					done();
+				});
+			});
 			//
 		});
 	});
