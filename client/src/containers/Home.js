@@ -26,12 +26,11 @@ class Home extends Component {
 			<div id="Home" data-test="container-home">
 				<Greeting user={this.props.user} data-test="greeting" />
 				{this.props.user.isAuth ? <CharacterList /> : <Login />}
-				{this.props.user.welcomeNotified === 0 && this.props.user.isAuth ? (
-					<SnackbarNotification
-						message={`Login successful! Welcome back, ${this.props.user.username}!`}
-					/>
+				{this.props.user.notifications.welcome === 0 &&
+				this.props.user.isAuth ? (
+					<SnackbarNotification message={this.props.user.message} />
 				) : null}
-				{this.props.user.goodbyeNotified === 1 ? (
+				{this.props.user.notifications.goodbye === 1 ? (
 					<SnackbarNotification message={"Logout successful! See ya!"} />
 				) : null}
 				<button onClick={() => this.props.reset()}>RESET THIS MOTHA</button>

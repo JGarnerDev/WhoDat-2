@@ -46,6 +46,7 @@ describe.only("App (server) test", () => {
 
 	describe("User routes test", () => {
 		describe("Unit tests", () => {
+			// Black box tests to make sure the endpoints are responding
 			describe("GET", () => {
 				it("can recieve a request for authentication", async (done) => {
 					await request(server).get("/api/auth").expect(200);
@@ -127,7 +128,6 @@ describe.only("App (server) test", () => {
 				});
 			});
 		});
-		// Black box tests to make sure the endpoints are present
 
 		describe("Responses and Validation (intergration tests)", () => {
 			// done

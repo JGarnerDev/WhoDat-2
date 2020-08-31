@@ -2,17 +2,17 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
+import SnackbarNotification from "../../components/SnackbarNotification";
+
 import { registerUser } from "../../store/actions";
 
 class Register extends Component {
 	state = {
 		username: "",
-		name: "",
-		lastname: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
-		error: "",
+		isSubmitted: false,
 	};
 
 	handleChangeFor = (propertyName) => (event) => {
@@ -28,6 +28,13 @@ class Register extends Component {
 			email: this.state.email,
 			password: this.state.password,
 		});
+		setTimeout(() => {
+			this.setState({ isSubmitted: true });
+		}, 200);
+
+		setTimeout(() => {
+			this.setState({ isSubmitted: false });
+		}, 1200);
 	};
 
 	render() {
@@ -63,6 +70,9 @@ class Register extends Component {
 						onChange={this.handleChangeFor("confirmPassword")}
 					/>
 					<button type="submit">Register</button>
+					{this.props.user.message && this.state.isSubmitted ? (
+						<SnackbarNotification message={this.props.user.message} />
+					) : null}
 				</form>
 			</div>
 		);

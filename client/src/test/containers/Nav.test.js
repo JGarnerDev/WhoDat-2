@@ -82,10 +82,6 @@ describe("Nav container component", () => {
 				const found = findByTestAttr(notAuthUserNav, "link-logout");
 				expect(found.length).toBe(0);
 			});
-			it("does not render `settings` link ", () => {
-				const found = findByTestAttr(notAuthUserNav, "link-settings");
-				expect(found.length).toBe(0);
-			});
 		});
 	});
 
@@ -113,10 +109,6 @@ describe("Nav container component", () => {
 			});
 			it("should render `create new characters` link ", () => {
 				const found = findByTestAttr(authUserNav, "link-create");
-				expect(found.length).toBe(1);
-			});
-			it("should render `settings` link ", () => {
-				const found = findByTestAttr(authUserNav, "link-settings");
 				expect(found.length).toBe(1);
 			});
 		});

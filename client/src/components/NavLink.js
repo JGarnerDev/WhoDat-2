@@ -9,13 +9,11 @@ import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import DeviceHubOutlinedIcon from "@material-ui/icons/DeviceHubOutlined";
 import ExitToAppOutlinedIcon from "@material-ui/icons/ExitToAppOutlined";
 import HomeIcon from "@material-ui/icons/Home";
-import SettingsIcon from "@material-ui/icons/Settings";
 
 const linkContent = {
 	home: ["/home", <HomeIcon />, "Home"],
 	login: ["/login", <PersonAddIcon />, "Log in / Register"],
 	logout: ["/user/logout", <ExitToAppOutlinedIcon />, "Log out"],
-	settings: ["/user/settings", <SettingsIcon />, "Account Settings"],
 	community: ["/community", <DeviceHubOutlinedIcon />, "Community"],
 	characters: ["/characters", <PeopleAltOutlinedIcon />, "Characters"],
 	create: ["/create", <AddCircleRoundedIcon />, "Create New Character"],
@@ -28,9 +26,11 @@ function NavLink({ navLinkPath }) {
 	const contents = linkContent[navLinkPath] || null;
 
 	return contents ? (
-		<Link to={contents[0]} data-test="component-NavLink">
-			<div data-test="NavLink-iconwrapper">{contents[1]}</div>
-			<div>{contents[2]}</div>
+		<Link to={contents[0]} data-test="component-NavLink" className="nav-link">
+			<div data-test="NavLink-iconwrapper" className="link-icon">
+				{contents[1]}
+			</div>
+			<div className="link-text">{contents[2]}</div>
 		</Link>
 	) : null;
 }

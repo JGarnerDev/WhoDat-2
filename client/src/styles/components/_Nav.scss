@@ -1,0 +1,28 @@
+nav {
+    display: flex;
+    flex-direction: row-reverse;
+}
+.nav-link {
+    display: flex;
+    align-items: center;
+    //
+    height: 30px;
+    margin: 10px 0 10px 0;
+    //
+    text-decoration: none;
+
+    .link-icon {
+        display: flex;
+        justify-content: center;
+        width: 25%;
+        height: 100%;
+    }
+    .link-text {
+        width: 75%;
+        font-weight: 500;
+    }
+    svg {
+        height: 100%;
+        width: auto;
+    }
+}

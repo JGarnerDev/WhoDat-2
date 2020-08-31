@@ -5,8 +5,20 @@ import { findByTestAttr, checkProps, createTestStore } from "../testUtils";
 
 import Home from "../../containers/Home";
 
-const storeWithAuth = createTestStore({ user: { isAuth: true } });
-const storeWithoutAuth = createTestStore({ user: { isAuth: false } });
+const storeWithAuth = createTestStore({
+	user: {
+		isAuth: true,
+		logout: false,
+		notifications: { welcome: 0, goodbye: 0 },
+	},
+});
+const storeWithoutAuth = createTestStore({
+	user: {
+		isAuth: true,
+		logout: false,
+		notifications: { welcome: 0, goodbye: 0 },
+	},
+});
 
 const setupAuthHome = () => {
 	const component = shallow(<Home store={storeWithAuth} />);
@@ -34,28 +46,6 @@ describe("Home component", () => {
 			const AuthHome = setupAuthHome().dive().dive();
 
 			const found = findByTestAttr(AuthHome, "container-home");
-			expect(found.length).toBe(1);
-		});
-	});
-	describe("When the user is not authorized/logged in", () => {
-		let notAuthHome;
-
-		beforeAll(() => {
-			notAuthHome = setupNotAuthHome().dive().dive();
-		});
-		it("renders a greeting string", () => {
-			const found = findByTestAttr(notAuthHome, "greeting");
-			expect(found.length).toBe(1);
-		});
-	});
-	describe("When the user is authorized/logged in", () => {
-		let authHome;
-		beforeAll(() => {
-			authHome = setupAuthHome().dive().dive();
-		});
-
-		it("renders a greeting string", () => {
-			const found = findByTestAttr(authHome, "greeting");
 			expect(found.length).toBe(1);
 		});
 	});

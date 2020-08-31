@@ -62,7 +62,7 @@ app.get("/api/character", (req, res) => {
 			if (err)
 				return res.json({
 					success: false,
-					message: "Unfortunately, we couldn't find this character.",
+					message: "Character retrieval failed - try again soon!",
 				});
 			res.json({ success: true, character });
 		}
@@ -103,7 +103,7 @@ app.get("/api/characters_get", async (req, res) => {
 		? res.json({ success: true, characters })
 		: res.json({
 				success: false,
-				message: "Couldn't retrieve any saved characters - try again soon!",
+				message: "Retrieval of characters failed - try again soon!",
 		  });
 });
 
@@ -162,7 +162,7 @@ app.get("/api/users_get", async (req, res) => {
 		? res.json({ success: true, users })
 		: res.json({
 				success: false,
-				message: "Couldn't retrieve any registered users - try again soon!",
+				message: "Retrieval of users failed - try again soon!",
 		  });
 });
 
@@ -173,7 +173,7 @@ app.get("/api/user", (req, res) => {
 		if (err || user === null)
 			return res.json({
 				success: false,
-				message: "Unfortunately, we couldn't find this user!",
+				message: "User retrieval failed - try again soon!",
 			});
 		res.send({
 			success: true,
@@ -191,12 +191,12 @@ app.get("/api/characters_user_get", (req, res) => {
 		if (err)
 			return res.json({
 				success: false,
-				message: "Unfortunately, we couldn't find characters at this moment",
+				message: "Retrieving this user's characters failed - try again soon!",
 			});
 		if (characters.length === 0) {
 			return res.send({
 				success: true,
-				message: `No characters found by requested author`,
+				message: `This user doesn't have any characters yet :(`,
 			});
 		} else {
 			return res.send({
@@ -215,8 +215,7 @@ app.get("/api/logout", auth, (req, res) => {
 			return res.json({
 				success: false,
 				err: err,
-				message:
-					"There was an error in logging you out. You might bealready logged out - you can't log out any harder.",
+				message: "Logout failed.",
 			});
 		}
 		res.json({
@@ -237,49 +236,52 @@ app.post("/api/register", (req, res) => {
 	) {
 		return res.json({
 			success: false,
-			message: "Required account information is missing",
+			message: "Registration failed - required account information is missing",
 		});
 	}
 	if (req.body.password.length < 6) {
 		return res.json({
 			success: false,
-			message: "Submitted password is too short",
+			message: "Registration failed - submitted password is too short",
 		});
 	}
 	if (req.body.username.length > 100) {
 		return res.json({
 			success: false,
-			message: "Submitted username is too big",
+			message: "Registration failed - submitted username is too big",
 		});
 	}
 	const user = new User(req.body);
 
-	user.save((err, userDoc) => {
+	user.save((err, user) => {
 		if (err) {
 			const conflictingValue = Object.keys(err.keyPattern)[0];
 			switch (conflictingValue) {
 				case "email":
 					return res.json({
 						success: false,
-						message: "An account with that email already exists! ",
+						message:
+							"Registration failed - an account with that email already exists! ",
 					});
 				case "username":
 					return res.json({
 						success: false,
-						message: "An account with that username already exists! ",
+						message:
+							"Registration failed - an account with that username already exists! ",
 					});
 
 				default:
 					return res.json({
 						success: false,
-						message: "An unknown error occurred in registering your account",
+						message: "Registration failed - an unknown error occurred",
 					});
 			}
 		}
-		delete userDoc.password;
+		delete user.password;
 		res.json({
 			success: true,
-			userDoc,
+			message: `Registration success - Thank you for joining, ${user.username}!`,
+			user,
 		});
 	});
 });
@@ -312,6 +314,7 @@ app.post("/api/login", (req, res) => {
 						_id: user._id,
 						email: user.email,
 						username: user.username,
+						message: `Welcome back, ${user.username}!`,
 					});
 				});
 			});
@@ -326,41 +329,17 @@ app.post("/api/character", (req, res) => {
 		if (err)
 			return res.json({
 				success: false,
-				message:
-					"Unfortunately, there was an error in creating this character.",
+				message: "Character save failed - there was an unknown error",
 			});
 		res.status(200).json({
 			success: true,
-			message: "Character saved!",
+			message: "Character save successful!",
 			_id: character._id,
 		});
 	});
 });
 
 // UPDATE //
-
-app.post("/api/user_update", (req, res) => {
-	User.findByIdAndUpdate(
-		req.body._id,
-		req.body,
-		{
-			new: true,
-		},
-		(err, user) => {
-			if (err || !user) {
-				return res.json({
-					success: false,
-					message:
-						"Unfortunately, there was an error in locating your user file for update.",
-				});
-			}
-			res.json({
-				success: true,
-				user,
-			});
-		}
-	);
-});
 
 app.post("/api/character_update", (req, res) => {
 	Character.findByIdAndUpdate(
@@ -373,11 +352,11 @@ app.post("/api/character_update", (req, res) => {
 			if (!character)
 				return res.json({
 					success: false,
-					message:
-						"Unfortunately, there was an error in locating your character for updating.",
+					message: "Character update failed - there was an unknown error",
 				});
 			res.json({
 				success: true,
+				message: "Character update successful!",
 				character: character,
 			});
 		}
@@ -391,12 +370,11 @@ app.delete("/api/user_delete", (req, res) => {
 		if (err || !doc)
 			return res.json({
 				success: false,
-				message:
-					"Unfortunately, there was an error in locating your account for deletion.",
+				message: "Account deletion failed - couldn't locate account",
 			});
 		res.json({
 			success: true,
-			message: `The account for ${req.body.username} was successfully deleted!`,
+			message: `Account for ${req.body.username} was successfully deleted!`,
 		});
 	});
 });
@@ -406,11 +384,11 @@ app.delete("/api/character_delete", (req, res) => {
 		if (err || doc == null)
 			return res.json({
 				success: false,
-				message: `Unfortunately, there was an error in locating ${req.body.name} for deletion.`,
+				message: `Character deletion failed - there was an error in locating ${req.body.name}`,
 			});
 		res.json({
 			success: true,
-			message: `The character ${req.body.name} was successfully deleted!`,
+			message: `Character deletion successful - The character ${req.body.name} is gone!`,
 		});
 	});
 });
@@ -419,10 +397,10 @@ app.delete("/api/character_delete", (req, res) => {
 
 // vvv Runs server on port vvv
 
-// app.listen(port, () => {
-// 	console.log(`Server running on port ${port}`);
-// });
+app.listen(port, () => {
+	console.log(`Server running on port ${port}`);
+});
 
 // vvv Makes server available for testing vvv
 
-module.exports = app;
+// module.exports = app;

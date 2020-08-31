@@ -32,14 +32,7 @@ class NavContainer extends Component {
 		// If a link is not rendering, it's most likely because the string here isn't matching with a string in the NavLink component
 
 		const nonAuthLinks = ["home", "community", "characters", "create"];
-		const authLinks = [
-			"home",
-			"logout",
-			"settings",
-			"community",
-			"characters",
-			"create",
-		];
+		const authLinks = ["home", "logout", "community", "characters", "create"];
 
 		function renderLink(linkname, i) {
 			return (

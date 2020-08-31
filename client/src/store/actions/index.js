@@ -19,8 +19,6 @@ export const actionTypes = {
 	// User CRUD & Admin (user reducer)
 
 	USER_REGISTER: "USER_REGISTER",
-	USER_UPDATE: "USER_UPDATE",
-	USER_DELETE: "USER_DELETE",
 	USER_AUTH: "USER_AUTH",
 	USER_LOGIN: "USER_LOGIN",
 	USER_LOGOUT: "USER_LOGOUT",
@@ -112,22 +110,6 @@ export function registerUser(user) {
 	};
 }
 
-export function updateUser(updatedUserData) {
-	const request = axios.post("/api/user_update", updatedUserData);
-	return {
-		type: actionTypes.USER_UPDATE,
-		payload: request,
-	};
-}
-
-export function deleteUserById(id) {
-	const request = axios.delete("/api/user_delete", { _id: id });
-	return {
-		type: actionTypes.USER_DELETE,
-		payload: request.success,
-	};
-}
-
 export function auth() {
 	const request = axios.get("/api/auth").then((response) => response.data);
 
@@ -183,6 +165,7 @@ export function updateCharacter(character) {
 	const request = axios
 		.post("/api/character_update", character)
 		.then((response) => response.data);
+
 	return {
 		type: actionTypes.CHARACTER_UPDATE,
 		payload: request,

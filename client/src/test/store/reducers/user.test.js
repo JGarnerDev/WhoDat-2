@@ -16,7 +16,7 @@ describe("User reducer", () => {
 			expect(updatedState).toEqual({
 				isAuth: false,
 				logout: false,
-				notifications: { welcome: 0, goodbye: 0, errmessage: "" },
+				notifications: { welcome: 0, goodbye: 0 },
 			});
 		});
 	});
@@ -36,16 +36,13 @@ describe("User reducer", () => {
 			const updatedState = userReducer(defaultState, action);
 			const expected = {
 				isAuth: false,
-				register: {
-					success: false,
-					message: "A user with that email already exists!",
-				},
+				message: "A user with that email already exists!",
 			};
 			expect(updatedState).toEqual({ ...defaultState, ...expected });
 		});
 		it("should update the user state with names, email, role, id, and characters (empty array)", () => {
 			const defaultState = userReducer(undefined, {});
-			const userDoc = {
+			const user = {
 				name: "foo",
 				lastname: "bar",
 				email: "m@m.com",
@@ -56,51 +53,19 @@ describe("User reducer", () => {
 				payload: {
 					data: {
 						success: true,
-						doc: userDoc,
+						user: user,
 					},
 				},
 			};
 			const updatedState = userReducer(defaultState, action);
 			const expected = {
 				isAuth: true,
-				register: {
-					success: true,
-					message: "",
-				},
-				...userDoc,
+				...user,
 			};
 			expect(updatedState).toEqual({ ...defaultState, ...expected });
 		});
 	});
-	describe("USER_UPDATE action type", () => {
-		it("will update `user` value with the action payload when there is a previous value", () => {
-			const previousUser = { name: "Jack", id: "1337", email: "no@gmail.com" };
-			const updatedUser = { name: "WAT", id: "WAT", email: "WAT" };
-			const previousState = { isAuth: true, ...previousUser };
-			const action = {
-				type: actionTypes.USER_UPDATE,
-				payload: updatedUser,
-			};
 
-			const updatedState = userReducer(previousState, action);
-			const expected = { isAuth: true, ...updatedUser };
-
-			expect(updatedState).toEqual(expected);
-		});
-	});
-	describe("USER_DELETE action type", () => {
-		it("will delete `user` properties ", () => {
-			const previousUser = { name: "Jack", id: "1337", email: "no@gmail.com" };
-			const previousState = { isAuth: true, user: previousUser };
-			const action = {
-				type: actionTypes.USER_DELETE,
-			};
-
-			const updatedState = userReducer(previousState, action);
-			const expected = {};
-			expect(updatedState).toEqual(expected);
-		});
-	});
 	describe("USER_AUTH action type", () => {
 		it("will update `user` value with the action payload when there is no previous value", () => {
 			const defaultState = userReducer(undefined, {});
