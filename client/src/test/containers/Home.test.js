@@ -14,7 +14,7 @@ const storeWithAuth = createTestStore({
 });
 const storeWithoutAuth = createTestStore({
 	user: {
-		isAuth: true,
+		isAuth: false,
 		logout: false,
 		notifications: { welcome: 0, goodbye: 0 },
 	},
