@@ -35,12 +35,14 @@ export function generateStats(d6PerStat) {
 	return stats;
 }
 
-export function generateName(race, gender) {
+export function generateName(race = "any", gender = "any") {
 	if (race === "any") {
-		race = null;
+		race = getRandomFromArr(Object.keys(names));
 	}
-	race = race || getRandomFromArr(Object.keys(names));
-	gender = gender || getRandomFromArr(["male", "female"]);
+	if (gender === "any") {
+		gender = getRandomFromArr(["male", "female"]);
+	}
+
 	let firstName = getRandomFromArr(names[race][gender]);
 	let lastName = getRandomFromArr(names[race].family);
 	return `${firstName} ${lastName}`;

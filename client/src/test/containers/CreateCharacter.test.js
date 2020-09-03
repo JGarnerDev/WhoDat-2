@@ -4,7 +4,7 @@ import { shallow } from "enzyme";
 import { findByTestAttr, createTestStore } from "../testUtils";
 
 import { characterClasses, races, backgrounds } from "../../resources";
-import { getRandomFromArr } from "../../utils";
+import { getRandomFromArr, capitalize } from "../../utils";
 
 import { CreateCharacter } from "../../containers/Character/CreateCharacter";
 
@@ -52,13 +52,6 @@ describe("CreateCharacter container component", () => {
 			const CreateCharacter = setupAuthCreateCharacter();
 			const found = findByTestAttr(CreateCharacter, "component-create");
 			expect(found.length).toBe(1);
-		});
-		it("renders the same component regardless of authorization ", () => {
-			const authCreateCharacter = setupAuthCreateCharacter();
-			const notAuthCreateCharacter = setupNotAuthCreateCharacter();
-			expect(authCreateCharacter.debug()).toEqual(
-				notAuthCreateCharacter.debug()
-			);
 		});
 	});
 	describe("Rendering", () => {
@@ -163,7 +156,7 @@ describe("CreateCharacter container component", () => {
 					"currentClass"
 				);
 
-				expect(authCreateCharacter.state().class).toEqual(
+				expect(capitalize(authCreateCharacter.state().characterClass)).toEqual(
 					currentCharacterClassElement.text()
 				);
 			});
@@ -231,7 +224,7 @@ describe("CreateCharacter container component", () => {
 				//
 				expect(previousState).not.toEqual(updatedState);
 				expect(races).toContain(updatedState.race);
-				expect(characterClasses).toContain(updatedState.class);
+				expect(characterClasses).toContain(updatedState.characterClass);
 				expect(backgrounds).toContain(updatedState.background);
 			});
 		});
@@ -259,7 +252,7 @@ describe("CreateCharacter container component", () => {
 
 				expect(stateWithMaleNameStyle.nameStyle).toBe("male");
 				expect(stateWithFemaleNameStyle.nameStyle).toBe("female");
-				expect(stateWithAnyNameStyle.nameStyle).toBe(null);
+				expect(["male", "female"]).toContain(stateWithAnyNameStyle.nameStyle);
 			});
 			it("updates the `nameGroup` state value correctly when a value is selected", () => {
 				const component = setupAuthCreateCharacter();
@@ -292,7 +285,7 @@ describe("CreateCharacter container component", () => {
 				raceSelect.simulate("change", { target: { value: race } });
 				const updatedState = component.state();
 				expect(previousState.race).not.toBe(updatedState.race);
-				expect(races).toContain(updatedState.race)
+				expect(races).toContain(updatedState.race);
 			});
 		});
 		describe("Character class settings", () => {
@@ -304,7 +297,7 @@ describe("CreateCharacter container component", () => {
 				classSelect.simulate("change", { target: { value: characterClass } });
 				const updatedState = component.state();
 				expect(previousState.class).not.toBe(updatedState.class);
-				expect(characterClasses).toContain(updatedState.class)
+				expect(characterClasses).toContain(updatedState.class);
 			});
 		});
 		describe("Character background settings", () => {
@@ -316,7 +309,7 @@ describe("CreateCharacter container component", () => {
 				backgroundSelect.simulate("change", { target: { value: background } });
 				const updatedState = component.state();
 				expect(previousState.background).not.toBe(updatedState.background);
-				expect(backgrounds).toContain(updatedState.background)
+				expect(backgrounds).toContain(updatedState.background);
 			});
 		});
 	});
