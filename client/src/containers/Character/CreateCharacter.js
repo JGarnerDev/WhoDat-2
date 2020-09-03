@@ -39,6 +39,7 @@ export class CreateCharacter extends Component {
 		};
 		this.generateCharacter(character);
 	};
+
 	generateRandomAll = () => {
 		this.setState({
 			name: generateName(this.state.nameGroup, this.state.nameStyle),
@@ -74,13 +75,14 @@ export class CreateCharacter extends Component {
 	];
 
 	renderPropertySettings = () => {
-		return this.properties.map((property) => (
+		return this.properties.map((property, i) => (
 			<PropertySelector
 				property={`${property.name}`}
 				value={this.state[property.name]}
 				resource={property.resource}
 				handleChangeFor={this.handleChangeFor}
 				data-test={`${property.name}-settings`}
+				key={i}
 			/>
 		));
 	};
