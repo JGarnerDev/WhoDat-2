@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import Greeting from "../components/Greeting";
 import Login from "../containers/Admin/Login";
-import CharacterList from "../components/Characters/CharacterList";
+import CharacterList from "../components/CharacterData/CharacterList";
 import SnackbarNotification from "../components/SnackbarNotification";
 
 import { connect } from "react-redux";

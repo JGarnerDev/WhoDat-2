@@ -49,7 +49,7 @@ describe("CreateCharacter container component", () => {
 			expect(found.length).toBe(1);
 		});
 		it("renders without error when user is not authorized", () => {
-			const CreateCharacter = setupAuthCreateCharacter();
+			const CreateCharacter = setupNotAuthCreateCharacter();
 			const found = findByTestAttr(CreateCharacter, "component-create");
 			expect(found.length).toBe(1);
 		});
