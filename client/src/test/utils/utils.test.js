@@ -4,6 +4,7 @@ import {
 	rollD6,
 	generateStats,
 	generateName,
+	capitalize,
 } from "../../utils";
 
 describe("Utility functions", () => {
@@ -165,7 +166,7 @@ describe("Utility functions", () => {
 			}
 		});
 	});
-	//
+	// done
 	describe("generateName", () => {
 		it("returns a name string with first and last name when no arguments are given", () => {
 			const randomName = generateName();
@@ -177,5 +178,12 @@ describe("Utility functions", () => {
 			const lastName = arrOfFirstAndLastName[1];
 			expect(lastName.charAt(0)).toBe(lastName.charAt(0).toUpperCase());
 		});
+	});
+	//
+	describe("capitalize", () => {
+		const lowerCaseWord = "cat";
+		const capitalized = "Cat";
+		const actual = capitalize(lowerCaseWord);
+		expect(actual).toBe(capitalized);
 	});
 });

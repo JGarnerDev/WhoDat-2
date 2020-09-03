@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { generateName, getRandomFromArr } from "../../utils";
+import { generateName, getRandomFromArr, capitalize } from "../../utils";
 
 import { races, characterClasses, backgrounds } from "../../resources";
 
@@ -18,7 +18,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
-class CreateCharacter extends Component {
+export class CreateCharacter extends Component {
 	state = {
 		name: "",
 		race: "",
@@ -58,24 +58,25 @@ class CreateCharacter extends Component {
 							background: getRandomFromArr(backgrounds),
 						});
 					}}
+					data-test="button-randomizeCharacter"
 				>
 					Full randomization
 				</button>
-				<form onSubmit={this.submitForm}>
-					<Accordion>
-						<AccordionSummary>
+				<form onSubmit={this.submitForm} data-test="form-characterCriteria">
+					<Accordion data-test="name-settings">
+						<AccordionSummary data-test="name-settings-header">
 							<h3>Name</h3>
-							<h1>{this.state.name}</h1>
+							<h1 data-test="currentName">{this.state.name}</h1>
 						</AccordionSummary>
-						<AccordionDetails>
-							{" "}
+						<AccordionDetails data-test="name-settings-interface">
 							<TextField
 								type="text"
 								name="name"
 								placeholder="Enter Character Name"
 								value={this.state.name}
 								onChange={this.handleChangeFor("name")}
-							/>{" "}
+								data-test="name-settings-textfield"
+							/>
 							<FormControl component="fieldset">
 								Name Style
 								<RadioGroup
@@ -94,6 +95,7 @@ class CreateCharacter extends Component {
 												nameStyle: "male",
 											})
 										}
+										data-test="radio-male"
 									/>
 									<FormControlLabel
 										value="female"
@@ -105,6 +107,7 @@ class CreateCharacter extends Component {
 												nameStyle: "female",
 											})
 										}
+										data-test="radio-female"
 									/>
 									<FormControlLabel
 										value="any"
@@ -116,16 +119,24 @@ class CreateCharacter extends Component {
 												nameStyle: null,
 											})
 										}
+										data-test="radio-any"
 									/>
 								</RadioGroup>
 							</FormControl>
 							<FormControl>
 								<InputLabel>Racial Nameset</InputLabel>
-								<Select onChange={this.handleChangeFor("nameGroup")}>
-									{races.map((race) => {
+								<Select
+									onChange={this.handleChangeFor("nameGroup")}
+									data-test="nameGroup-select"
+								>
+									{races.map((race, i) => {
 										const raceCapitalized =
 											race.charAt(0).toUpperCase() + race.slice(1);
-										return <MenuItem value={race}>{raceCapitalized}</MenuItem>;
+										return (
+											<MenuItem key={i} value={race}>
+												{raceCapitalized}
+											</MenuItem>
+										);
 									})}
 								</Select>
 							</FormControl>
@@ -139,48 +150,50 @@ class CreateCharacter extends Component {
 										),
 									});
 								}}
+								data-test="name-generate"
 							>
 								Generate random name
 							</button>
 						</AccordionDetails>
 					</Accordion>
-					<Accordion>
-						<AccordionSummary>
+					<Accordion data-test="race-settings">
+						<AccordionSummary data-test="race-settings-header">
 							<h3>Race</h3>
-							<h1>
-								{this.state.race.charAt(0).toUpperCase() +
-									this.state.race.slice(1)}
-							</h1>
+							<h1 data-test="currentRace">{capitalize(this.state.race)}</h1>
 						</AccordionSummary>
-						<AccordionDetails>
+						<AccordionDetails data-test="race-settings-interface">
 							<FormControl>
-								<Select onChange={this.handleChangeFor("race")}>
-									{races.map((race) => {
+								<Select
+									onChange={this.handleChangeFor("race")}
+									data-test="race-select"
+								>
+									{races.map((race, i) => {
 										const raceCapitalized =
 											race.charAt(0).toUpperCase() + race.slice(1);
-										return <MenuItem value={race}>{raceCapitalized}</MenuItem>;
+										return (
+											<MenuItem key={i} value={race}>
+												{raceCapitalized}
+											</MenuItem>
+										);
 									})}
 								</Select>
 							</FormControl>
 						</AccordionDetails>
 					</Accordion>
-					<Accordion>
-						<AccordionSummary>
+					<Accordion data-test="class-settings">
+						<AccordionSummary data-test="class-settings-header">
 							<h3>Class</h3>
-							<h1>
-								{this.state.class.charAt(0).toUpperCase() +
-									this.state.class.slice(1)}
-							</h1>
+							<h1 data-test="currentClass">{capitalize(this.state.class)}</h1>
 						</AccordionSummary>
-						<AccordionDetails>
+						<AccordionDetails data-test="class-settings-interface">
 							<FormControl>
-								<Select onChange={this.handleChangeFor("class")}>
-									{characterClasses.map((characterClass) => {
+								<Select onChange={this.handleChangeFor("class")} data-test="class-select">
+									{characterClasses.map((characterClass, i) => {
 										const characterClassCapitalized =
 											characterClass.charAt(0).toUpperCase() +
 											characterClass.slice(1);
 										return (
-											<MenuItem value={characterClass}>
+											<MenuItem key={i} value={characterClass}>
 												{characterClassCapitalized}
 											</MenuItem>
 										);
@@ -189,22 +202,21 @@ class CreateCharacter extends Component {
 							</FormControl>
 						</AccordionDetails>
 					</Accordion>
-					<Accordion>
-						<AccordionSummary>
+					<Accordion data-test="background-settings">
+						<AccordionSummary data-test="background-settings-header">
 							<h3>Background</h3>
-							<h1>
-								{this.state.background.charAt(0).toUpperCase() +
-									this.state.background.slice(1)}
+							<h1 data-test="currentBackground">
+								{capitalize(this.state.background)}
 							</h1>
 						</AccordionSummary>
-						<AccordionDetails>
+						<AccordionDetails data-test="background-settings-interface">
 							<FormControl>
-								<Select onChange={this.handleChangeFor("background")}>
-									{backgrounds.map((background) => {
+								<Select onChange={this.handleChangeFor("background")} data-test="background-select">
+									{backgrounds.map((background, i) => {
 										const backgroundCapitalized =
 											background.charAt(0).toUpperCase() + background.slice(1);
 										return (
-											<MenuItem value={background}>
+											<MenuItem key={i} value={background}>
 												{backgroundCapitalized}
 											</MenuItem>
 										);
@@ -213,14 +225,14 @@ class CreateCharacter extends Component {
 							</FormControl>
 						</AccordionDetails>
 					</Accordion>
-					<button
-						onClick={() => {
-							this.submitForm();
-						}}
-					>
-						Generate Character!
-					</button>
 				</form>
+				<button
+					onClick={() => {
+						this.submitForm();
+					}}
+				>
+					Generate Character!
+				</button>
 			</div>
 		);
 	}

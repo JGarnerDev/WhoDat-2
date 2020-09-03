@@ -9,6 +9,9 @@ export function createTestStore(initialState) {
 export function findByTestAttr(wrapper, val) {
 	return wrapper.find(`[data-test="${val}"]`);
 }
+export function diveTwiceIn(component) {
+	return component.dive().dive();
+}
 
 export function checkProps(component, conformingProps) {
 	const propError = checkPropTypes(
