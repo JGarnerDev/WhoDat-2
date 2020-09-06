@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
+import axios from "axios";
 import { generateName, getRandomFromArr } from "../../utils";
 
 import { races, characterClasses, backgrounds } from "../../resources";
@@ -15,14 +15,45 @@ export class CreateCharacter extends Component {
     race: getRandomFromArr(races),
     characterClass: getRandomFromArr(characterClasses),
     background: getRandomFromArr(backgrounds),
-
+    raceData: "",
     nameStyle: "any",
     nameGroup: "any",
   };
 
   componentDidMount() {
     this.generateRandomAll();
+    this.getRaceData();
+    this.getCharacterClassData();
+    // The API doesn't serve character background information, unfortunately :(
   }
+
+  generateRandomAll = () => {
+    this.setState({
+      name: generateName(this.state.nameGroup, this.state.nameStyle),
+      race: getRandomFromArr(races),
+      characterClass: getRandomFromArr(characterClasses),
+      background: getRandomFromArr(backgrounds),
+    });
+    this.setState({
+      raceData: this.getRaceData(),
+      characterClassData: this.getCharacterClassData()
+    })
+  };
+
+  getRaceData = () => {
+    return axios
+      .get(`https://www.dnd5eapi.co/api/races/${this.state.race}`)
+      .then((response) => {
+        this.setState({ raceData: response.data });
+      });
+  };
+  getCharacterClassData = () => {
+    return axios
+      .get(`https://www.dnd5eapi.co/api/classes/${this.state.characterClass}`)
+      .then((response) => {
+        this.setState({ characterClassData: response.data });
+      });
+  };
 
   handleChangeFor = (propertyName) => (event) => {
     this.setState({ [propertyName]: event.target.value });
@@ -40,15 +71,6 @@ export class CreateCharacter extends Component {
     this.generateCharacter(character);
   };
 
-  generateRandomAll = () => {
-    this.setState({
-      name: generateName(this.state.nameGroup, this.state.nameStyle),
-      race: getRandomFromArr(races),
-      characterClass: getRandomFromArr(characterClasses),
-      background: getRandomFromArr(backgrounds),
-    });
-  };
-
   generateNameWithSettings = (
     nameGroup = this.state.nameGroup,
     nameStyle = this.state.nameStyle
@@ -63,10 +85,11 @@ export class CreateCharacter extends Component {
   };
 
   properties = [
-    { name: "race", resource: races },
+    { name: "race", resource: races, apiData: "raceData" },
     {
       name: "characterClass",
       resource: characterClasses,
+      apiData: "characterClassData",
     },
     {
       name: "background",
@@ -80,6 +103,7 @@ export class CreateCharacter extends Component {
         property={`${property.name}`}
         value={this.state[property.name]}
         resource={property.resource}
+        details={this.state[property.apiData]}
         handleChangeFor={this.handleChangeFor}
         data-test={`${property.name}-settings`}
         key={i}
@@ -98,6 +122,7 @@ export class CreateCharacter extends Component {
         >
           Randomize
         </button>
+
         <form onSubmit={this.submitForm} data-test="form-characterCriteria">
           <NameGenerator
             {...this.state}

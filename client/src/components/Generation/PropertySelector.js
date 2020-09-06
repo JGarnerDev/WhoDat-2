@@ -15,6 +15,7 @@ export default function PropertySelector({
   property,
   value,
   resource,
+  details,
   handleChangeFor,
 }) {
   let categoryHeader;
@@ -22,6 +23,24 @@ export default function PropertySelector({
     categoryHeader = "Class";
   } else {
     categoryHeader = capitalize(property);
+  }
+
+  function renderDetails(details) {
+    if (!details) {
+      return;
+    }
+    if (details) {
+      const detailHeaders = Object.keys(details);
+      const detailContent = Object.values(details);
+      return details
+        ? detailHeaders.map((detailHeader, i) => (
+            <div>
+              <h1>{detailHeader}</h1>
+              <p>{detailContent[i].toString()}</p>
+            </div>
+          ))
+        : null;
+    }
   }
 
   return (
@@ -46,6 +65,7 @@ export default function PropertySelector({
             })}
           </Select>
         </FormControl>
+        <div>{renderDetails(details)}</div>
       </AccordionDetails>
     </Accordion>
   );
