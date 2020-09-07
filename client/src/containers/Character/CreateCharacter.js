@@ -15,7 +15,6 @@ export class CreateCharacter extends Component {
     race: getRandomFromArr(races),
     characterClass: getRandomFromArr(characterClasses),
     background: getRandomFromArr(backgrounds),
-    raceData: "",
     nameStyle: "any",
     nameGroup: "any",
   };
@@ -28,28 +27,30 @@ export class CreateCharacter extends Component {
   }
 
   generateRandomAll = () => {
+    const race = getRandomFromArr(races);
+    const characterClass = getRandomFromArr(characterClasses);
+    const background = getRandomFromArr(backgrounds);
+
     this.setState({
       name: generateName(this.state.nameGroup, this.state.nameStyle),
-      race: getRandomFromArr(races),
-      characterClass: getRandomFromArr(characterClasses),
-      background: getRandomFromArr(backgrounds),
+      race,
+      characterClass,
+      background,
+      raceData: this.getRaceData(race),
+      characterClassData: this.getCharacterClassData(characterClass),
     });
-    this.setState({
-      raceData: this.getRaceData(),
-      characterClassData: this.getCharacterClassData()
-    })
   };
 
-  getRaceData = () => {
+  getRaceData = (race) => {
     return axios
-      .get(`https://www.dnd5eapi.co/api/races/${this.state.race}`)
+      .get(`https://www.dnd5eapi.co/api/races/${race}`)
       .then((response) => {
         this.setState({ raceData: response.data });
       });
   };
-  getCharacterClassData = () => {
+  getCharacterClassData = (characterClass) => {
     return axios
-      .get(`https://www.dnd5eapi.co/api/classes/${this.state.characterClass}`)
+      .get(`https://www.dnd5eapi.co/api/classes/${characterClass}`)
       .then((response) => {
         this.setState({ characterClassData: response.data });
       });
@@ -57,6 +58,11 @@ export class CreateCharacter extends Component {
 
   handleChangeFor = (propertyName) => (event) => {
     this.setState({ [propertyName]: event.target.value });
+    if (propertyName === "race") {
+      this.getRaceData(event.target.value);
+    } else if (propertyName === "characterClass") {
+      this.getCharacterClassData(event.target.value);
+    }
   };
 
   submitForm = (event) => {
@@ -78,8 +84,6 @@ export class CreateCharacter extends Component {
     this.setState({
       nameGroup,
       nameStyle,
-    });
-    this.setState({
       name: generateName(nameGroup, nameStyle),
     });
   };
