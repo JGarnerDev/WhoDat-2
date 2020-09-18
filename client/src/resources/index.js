@@ -13,6 +13,22 @@ export const characterClasses = [
 	"warlock",
 	"wizard",
 ];
+export const characterClassSummaries = [
+	"We'll pick a character for you at random!",
+	"A powerful, relentless warrior capable of enormous feats of strength and endurance",
+	"An entertainer, enchanter, and jack-of-all-trades that envokes magic through their performances",
+	"A protective or destructive holy mage that specializes in the magics of their chosen and sworn God",
+	"A mage dedicated to the ways and powers of flora and fauna, capable of shapeshifting and communing with the wild",
+	"A swift, versatile warrior that uses his strength, skills, and weapons to outmaneuver and best their enemies",
+	"A master of the unhanded combat, hidden techniques, and deep wisdom of their martial arts order",
+	"A holy warrior that defends their faith through weapons and righteous deeds",
+	"A skilled warrior of the wilds, capable of leveraging their environment and its inhabitants to gain advantage",
+	"A dexterous thief, assassin, and adventurer that relies on ambush and cunning to vanquish their foes",
+	"A mage with the raw power of natural-born magical powers and strength of will",
+	"A mage with powers gained by a covenant with an entity of untold power",
+	"A mage with immense knowledge and intellect, gathering power via research, observation, and talent",
+];
+
 export const races = [
 	"any",
 	"dragonborn",
@@ -25,7 +41,78 @@ export const races = [
 	"human",
 	"tiefling",
 ];
+export const raceSummaries = [
+	"We'll pick a race for you at random!",
+	// Description, Stats Bonus, Best Classes
+	[
+		"The Dragonborn are a noble people that carry traits of dragons, while being slightly larger than humans",
+		"Strength + 2, Charisma + 1",
+		"Barbarian, Paladin, Sorcerer, Warlock",
+	],
+	[
+		"Dwarves are stout, resilient, and skilled. They often dwell in the hills or deep in mines.",
+		"Constitution + 2",
+		"Barbarian, Cleric, Druid, Fighter, Wizard",
+	],
+	[
+		"The Elves are a wise and ancient people who have a deep connection to the wilderness",
+		"Dexterity + 2",
+		"Fighter, Monk, Warlock, Wizard",
+	],
+	[
+		"Gnomes are a small, crafty, enthusiastic, and intelligent people who become experts in their domains",
+		"Intelligence + 2",
+		"Rogue, Wizard",
+	],
+	[
+		"Half-Elves are the product of both human and elvish heritage, gaining traits of both",
+		"Charisma + 2, +1 to two other abilities of your choice",
+		"Bard, Druid, Paladin, Rogue, Sorcerer, Warlock",
+	],
+	[
+		"Half-Orcs are the product of both human and orcish heritage, gaining traits of both",
+		"Strength + 2, Constitution + 1",
+		"Barbarian, Fighter",
+	],
+	[
+		"Halflings are a lucky, dexterous, resourceful race, and are quite small ",
+		"Dexterity + 2",
+		"Bard, Cleric, Druid, Fighter, Warlock",
+	],
+	[
+		"Humans are a naturally versatile race, containing individuals with all sorts of talents and abilities",
+		"All of your abilities increase by 1",
+		"Any class",
+	],
+	[
+		"Tieflings are the progeny of humans and devils, though they live amongst all the other races",
+		"Charisma + 2, Intelligence + 1",
+		"Bard, Paladin, Rogue, Sorcerer, Warlock",
+	],
+	,
+];
 export const backgrounds = [
+	"any",
+	"acolyte",
+	"charlatan",
+	"criminal",
+	"entertainer",
+	"folk hero",
+	"gladiator",
+	"guild artisan",
+	"guild merchant",
+	"hermit",
+	"knight",
+	"noble",
+	"outlander",
+	"pirate",
+	"sage",
+	"sailor",
+	"soldier",
+	"spy",
+	"urchin",
+];
+export const backgroundSummaries = [
 	"any",
 	"acolyte",
 	"charlatan",
