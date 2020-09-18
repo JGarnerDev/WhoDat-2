@@ -3,7 +3,14 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { generateName, getRandomFromArr } from "../../utils";
 
-import { races, characterClasses, backgrounds } from "../../resources";
+import {
+	races,
+	raceSummaries,
+	characterClasses,
+	characterClassSummaries,
+	backgrounds,
+	backgroundSummaries,
+} from "../../resources";
 
 import NameGenerator from "../../components/Generation/NameGenerator";
 
@@ -62,6 +69,31 @@ export class CreateCharacter extends Component {
 		});
 	};
 
+	generateRace = () => {
+		const race = getRandomFromArr(races);
+		const raceInfo = raceSummaries[races.indexOf(race)];
+		this.setState({
+			race,
+			raceInfo,
+		});
+	};
+	generateCharacterClass = () => {
+		const characterClass = getRandomFromArr(characterClass);
+		const characterClassInfo =
+			characterClassSummaries[characterClass.indexOf(characterClass)];
+		this.setState({
+			characterClass,
+			characterClassInfo,
+		});
+	};
+	generateCharacterClass = () => {
+		const background = getRandomFromArr(backgrounds);
+		const backgroundInfo = backgroundSummaries[backgrounds.indexOf(background)];
+		this.setState({
+			background,
+			backgroundInfo,
+		});
+	};
 	render() {
 		return (
 			<div id="CreateCharacter" data-test="component-create">
@@ -81,7 +113,9 @@ export class CreateCharacter extends Component {
 						handleChangeFor={this.handleChangeFor}
 						data-test="name-settings"
 					/>
+
 					{/* Race Generator  */}
+
 					{/* Class Generator  */}
 					{/* Background Generator  */}
 				</form>

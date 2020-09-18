@@ -9,7 +9,7 @@ import {
 	AccordionSummary,
 } from "@material-ui/core/";
 
-export default function CharacterClassGenerator() {
+export default function RaceGenerator() {
 	return (
 		<Accordion>
 			<AccordionSummary></AccordionSummary>

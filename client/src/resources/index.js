@@ -28,7 +28,6 @@ export const characterClassSummaries = [
 	"A mage with powers gained by a covenant with an entity of untold power",
 	"A mage with immense knowledge and intellect, gathering power via research, observation, and talent",
 ];
-
 export const races = [
 	"any",
 	"dragonborn",
@@ -42,8 +41,7 @@ export const races = [
 	"tiefling",
 ];
 export const raceSummaries = [
-	"We'll pick a race for you at random!",
-	// Description, Stats Bonus, Best Classes
+	["We'll pick a race for you at random!", "", ""],
 	[
 		"The Dragonborn are a noble people that carry traits of dragons, while being slightly larger than humans",
 		"Strength + 2, Charisma + 1",
@@ -89,7 +87,6 @@ export const raceSummaries = [
 		"Charisma + 2, Intelligence + 1",
 		"Bard, Paladin, Rogue, Sorcerer, Warlock",
 	],
-	,
 ];
 export const backgrounds = [
 	"any",
@@ -113,27 +110,26 @@ export const backgrounds = [
 	"urchin",
 ];
 export const backgroundSummaries = [
-	"any",
-	"acolyte",
-	"charlatan",
-	"criminal",
-	"entertainer",
-	"folk hero",
-	"gladiator",
-	"guild artisan",
-	"guild merchant",
-	"hermit",
-	"knight",
-	"noble",
-	"outlander",
-	"pirate",
-	"sage",
-	"sailor",
-	"soldier",
-	"spy",
-	"urchin",
+	"We'll pick a background for you at random!",
+	"An member of a faith institution",
+	"A deceiver, schemer, and a master of disguise",
+	"Someone who engages in unlawful activity",
+	"A professional performer of any variety",
+	"A local legend known for have comitting a great dead",
+	"A trained combatant that performs for a crowd",
+	"A member of a guild that specializes in the craft of a certain kind",
+	"A member of a guild that specializes in the sale of a certain resource or good",
+	"A social recluse that lives in isolation from civilization",
+	"An upperclass warrior in the service of a noble",
+	"A lesser or greater member of a royal family",
+	"Someone who grew up in the wilds, far away from technology",
+	"A raider, pillager, and thief of the high seas",
+	"A researcher, student, or academic of a particular knowledge",
+	"Someone that earned a living by commerce or fishing on the seas",
+	"Someone that became an enlisted member of an army",
+	"An agent of a cause that hinders or gathers intel from the enemy",
+	"A poor individual from the city streets that uses their wits to survive",
 ];
-
 export const names = {
 	dragonborn: {
 		male: [
